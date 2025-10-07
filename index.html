@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -9,195 +9,282 @@
 <link href="https://fonts.googleapis.com/css2?family=Lobster&family=David+Libre:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* ====== RESET & BASE ====== */
+/* ===== Reset & Base ===== */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
   font-family: 'David Libre', serif;
   background:#fdf6e3; color:#111;
-  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
-a{color:inherit;text-decoration:none}
 
-/* ====== NAVBAR ====== */
+/* ===== NAV ===== */
 nav{
-  position:sticky; top:0; z-index:4000;
+  position:sticky; top:0; z-index:6000;
   display:flex; align-items:center; justify-content:space-between;
   padding:.9rem 1.5rem; gap:1rem;
   background: linear-gradient(90deg,#8e2de2 0%,#ff0080 100%);
-  box-shadow:0 6px 18px rgba(0,0,0,.25);
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
 }
 .brand { display:flex; align-items:center; gap:.5rem; color:#fff; font-weight:700; }
 .brand .mini { font-family:'Lobster',cursive; font-size:1.35rem; }
 .nav-links { display:flex; gap:1.9rem; align-items:center; margin-inline:auto; }
-.nav-links a { color:#fff; font-weight:700; padding:.25rem; transition: all 160ms; }
+.nav-links a { color:#fff; font-weight:700; padding:.25rem; }
 .nav-links a:hover { color:#ffd700; text-shadow:0 0 8px rgba(255,215,0,.9); }
 
-/* Get started button (purple-pink gradient) */
+/* CTA button in nav */
 .get-start-btn{
   background: linear-gradient(90deg,#8e2de2,#ff0080);
-  color:#fff; border:none; padding:.6rem 1rem; border-radius:10px; font-weight:800;
-  box-shadow: 0 10px 28px rgba(142,45,226,.18);
-}
-.get-start-btn:hover{ transform:translateY(-3px); box-shadow:0 18px 40px rgba(255,0,128,.18); }
-
-/* Hamburger (mobile) */
-.hamburger{ display:none; width:46px; height:40px; align-items:center; justify-content:center; cursor:pointer; background:transparent; border:none; }
-.hamburger .bar{ width:28px; height:3px; background:#fff; border-radius:3px; display:block; transition:transform .25s,opacity .25s; }
-.hamburger .bar.mid{ margin:6px 0; width:18px; transition:width .25s .05s; }
-
-@media(max-width:840px){
-  .nav-links{ display:none; }
-  .hamburger{ display:flex; }
+  color:#fff; border:none; padding:.55rem .9rem; border-radius:9px; font-weight:800;
+  box-shadow: 0 8px 28px rgba(142,45,226,.12);
 }
 
-/* ====== MOBILE PANEL ====== */
+/* Hamburger */
+.hamburger{ display:none; width:46px; height:40px; align-items:center; justify-content:center; cursor:pointer; border:none; background:transparent; }
+.hamburger .bar{ width:28px; height:3px; background:#fff; border-radius:3px; transition:transform .28s,opacity .28s; display:block; }
+.hamburger .bar.mid{ margin:6px 0; width:18px; transition:width .28s .05s; }
+
+/* Mobile panel */
 .mobile-panel{
   position:fixed; top:0; right:-100%; width:78%; max-width:380px; height:100%; background:#2c003e;
   padding:2.5rem 1.5rem; display:flex; flex-direction:column; gap:1rem; transition:right .32s cubic-bezier(.2,.9,.3,1);
-  z-index:4100;
+  z-index:6100; color:#fff;
 }
 .mobile-panel.show{ right:0; }
 .mobile-panel a{ color:#fff; font-weight:700; font-size:1.05rem; display:block; padding:.6rem 0; }
 .mobile-close{ position:absolute; right:12px; top:12px; background:transparent; border:none; color:#fff; font-size:28px; cursor:pointer; }
 
-/* ====== HERO ====== */
+/* Responsive nav */
+@media(max-width:840px){
+  .nav-links{ display:none; }
+  .hamburger{ display:flex; }
+  .brand { margin-right: .5rem; }
+}
+
+/* ===== HERO ===== */
 .hero{
   position:relative; height:74vh; min-height:480px;
   display:flex; align-items:flex-start; justify-content:center;
-  text-align:center; overflow:hidden; padding-top:2.2rem;
-  /* background fallback if images missing */
-  background: linear-gradient(135deg,#f2eaff 0%,#e4d4ff 100%);
-  color:#fff;
+  text-align:center; overflow:hidden; padding-top:2.6rem;
+  background: linear-gradient(135deg,#f2eaff 0%,#e8d8ff 100%);
   isolation:isolate;
 }
 
-/* background slides (brighter, less dark) */
+/* Background slides */
 .bg-wrap{ position:absolute; inset:0; z-index:1; overflow:hidden; }
 .bg-slide{
   position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-  opacity:0; transition:opacity 1000ms cubic-bezier(.2,.9,.2,1);
-  will-change:opacity; filter:brightness(1) contrast(1.02) saturate(1.08);
+  opacity:0; transition:opacity 1000ms cubic-bezier(.2,.9,.2,1); will-change:opacity;
+  filter:brightness(1.02) contrast(1.04) saturate(1.06);
 }
 .bg-slide.active{ opacity:1; }
 
-/* overlay (very light to protect readability) */
-.hero::after {
+/* Very light overlay for readability */
+.hero::after{
   content:""; position:absolute; inset:0; z-index:3;
-  background: linear-gradient(180deg, rgba(0,0,0,0.08) 8%, rgba(0,0,0,0.10) 45%, rgba(0,0,0,0.14) 100%);
+  background: linear-gradient(180deg, rgba(0,0,0,0.06) 8%, rgba(0,0,0,0.08) 45%, rgba(0,0,0,0.12) 100%);
   pointer-events:none;
 }
 
-/* ====== LOGO HOLDER (moved up & constrained glow) ====== */
+/* Logo holder moved up; no external frame - logo stands alone */
 .logo-holder{
-  position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; gap:.6rem;
-  margin-top:-3.2rem; /* move it up more */
-  width:100%; max-width:1100px; padding: 0 1rem;
+  position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; gap:.55rem;
+  margin-top:-3.6rem; width:100%; max-width:1100px; padding:0 1rem;
 }
 
-/* smaller pulse radius so it doesn't flood images */
-.logo-holder::before{
-  content:""; position:absolute; left:50%; top:18%; transform:translateX(-50%);
-  width:520px; height:520px; border-radius:50%;
-  background: radial-gradient(circle, rgba(255,180,60,0.25), rgba(0,0,0,0));
-  filter: blur(36px); opacity:0.95; z-index:-1; mix-blend-mode:screen;
-  transition:all .4s;
-  pointer-events:none;
-}
-
-/* subtle color cycle for the pulse */
-@keyframes pulse-swap {
-  0% { background: radial-gradient(circle, rgba(255,180,60,0.28), rgba(0,0,0,0)); }
-  48% { background: radial-gradient(circle, rgba(60,180,255,0.24), rgba(0,0,0,0)); }
-  100% { background: radial-gradient(circle, rgba(255,180,60,0.28), rgba(0,0,0,0)); }
-}
-.logo-holder::before { animation: pulse-swap 10s linear infinite; }
-
-/* ====== 3D S LOGO ====== */
+/* ===== 3D ARTISTIC GOLD S =====
+   We use layered CSS to create metallic look + animated shimmer + flame glow.
+   No circular frame; glow confined to small area via pseudo-elements.
+*/
 .logo-3d{
   --size: clamp(160px, 20vw, 260px);
-  width:var(--size); height:var(--size); display:grid; place-items:center; position:relative; transform-style:preserve-3d;
+  width:var(--size); height:var(--size); display:grid; place-items:center;
+  position:relative; transform-style:preserve-3d; z-index:11;
   filter: drop-shadow(0 28px 48px rgba(0,0,0,.45));
-  margin-bottom:.2rem;
-  z-index:11;
-  animation:logo-roll 8.5s linear infinite;
+  will-change: transform, filter;
 }
-.logo-3d .s{
-  font-family:'Lobster',cursive; font-size: calc(var(--size)*0.9);
-  color:transparent; -webkit-background-clip:text; background-clip:text;
-  background: linear-gradient(120deg,#ffd86b 0%, #ffb84d 32%, #fff6d6 58%, #ffd86b 100%);
-  text-shadow: 0 6px 22px rgba(0,0,0,.45);
-  display:inline-block;
-}
-/* small sheen */
-.logo-3d .s::after{
-  content:""; position:absolute; inset:0; z-index:5;
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 45%, rgba(255,255,255,0.12) 55%, rgba(255,255,255,0) 100%);
-  mix-blend-mode: screen; transform: translateX(-140%) skewX(-14deg); animation: sheen 2.8s linear infinite;
-}
-@keyframes sheen{ 0%{transform:translateX(-140%) skewX(-14deg); opacity:0} 8%,48%{opacity:.9} 100%{transform:translateX(140%) skewX(-14deg); opacity:0} }
-@keyframes logo-roll{ 0%{ transform: rotateY(-8deg) rotateX(6deg) rotateZ(-1deg) } 50%{ transform: rotateY(6deg) rotateX(8deg) rotateZ(1deg) } 100%{ transform: rotateY(-8deg) rotateX(6deg) rotateZ(-1deg) } }
 
-/* ====== HERO TEXT (bigger, clearer) ====== */
+/* Gold base: gradient + subtle bevel via multiple backgrounds */
+.logo-3d .s{
+  font-family:'Lobster',cursive;
+  font-size: calc(var(--size) * 0.9);
+  color: transparent;
+  -webkit-background-clip:text; background-clip:text;
+  background-image: linear-gradient(135deg, #fff9e6 0%, #ffd86b 18%, #ffb84d 45%, #ffd86b 80%, #fff9e6 100%);
+  text-shadow: 0 6px 26px rgba(0,0,0,.46);
+  position:relative;
+}
+
+/* metallic sheen that scans across */
+.logo-3d .s::after{
+  content:""; position:absolute; inset:0; z-index:6;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.75) 40%, rgba(255,255,255,0.12) 60%, rgba(255,255,255,0) 100%);
+  mix-blend-mode:screen;
+  transform: translateX(-160%) skewX(-12deg);
+  animation: gold-sheen 2.6s linear infinite;
+  pointer-events:none;
+}
+@keyframes gold-sheen{
+  0%{ transform: translateX(-160%) skewX(-12deg); opacity:0; }
+  8%{ opacity:1; }
+  48%{ transform: translateX(160%) skewX(-12deg); opacity:1; }
+  100%{ transform: translateX(160%) skewX(-12deg); opacity:0; }
+}
+
+/* subtle 3D roll */
+@keyframes s-roll {
+  0%{ transform: rotateY(-8deg) rotateX(4deg); }
+  50%{ transform: rotateY(8deg) rotateX(6deg); }
+  100%{ transform: rotateY(-8deg) rotateX(4deg); }
+}
+.logo-3d{ animation: s-roll 9s ease-in-out infinite; }
+
+/* bright glowing flame aura (confined small area behind text) */
+.logo-3d::before{
+  content:""; position:absolute; left:50%; top:48%;
+  transform:translate(-50%,-50%);
+  width:360px; height:360px; border-radius:50%;
+  background: radial-gradient(circle at 45% 40%, rgba(255,200,80,0.45) 0%, rgba(255,120,30,0.08) 18%, rgba(255,120,30,0.02) 28%, rgba(0,0,0,0) 60%);
+  filter: blur(36px) saturate(1.2); z-index:-2; pointer-events:none; mix-blend-mode:screen;
+  opacity:0.95;
+  animation: flame-pulse 10s linear infinite;
+}
+@keyframes flame-pulse{
+  0%{ filter: blur(32px) saturate(1.1); transform:translate(-50%,-50%) scale(1); background: radial-gradient(circle at 45% 40%, rgba(255,200,80,0.46) 0%, rgba(255,120,30,0.09) 18%, rgba(0,0,0,0) 60%); }
+  48%{ filter: blur(36px) saturate(1.3); transform:translate(-50%,-52%) scale(1.02); background: radial-gradient(circle at 50% 50%, rgba(80,200,255,0.38) 0%, rgba(30,150,255,0.06) 18%, rgba(0,0,0,0) 66%); }
+  100%{ filter: blur(32px) saturate(1.1); transform:translate(-50%,-50%) scale(1); }
+}
+
+/* spark flicker overlay for drama */
+.logo-3d::after{
+  content:""; position:absolute; left:50%; top:22%;
+  transform:translateX(-50%);
+  width:120px; height:120px; border-radius:50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 30%);
+  filter: blur(12px); opacity:0; z-index:12; pointer-events:none;
+  animation: spark-flick 6.6s linear infinite;
+}
+@keyframes spark-flick{
+  0%{ opacity:0; transform:translateX(-50%) scale(.9) }
+  6%{ opacity:0.88; transform:translateX(-50%) scale(1.08) }
+  12%{ opacity:0; transform:translateX(-50%) scale(.95) }
+  100%{ opacity:0; }
+}
+
+/* ===== HERO TEXT ===== */
 .welcome{
-  font-size:1.15rem; color:#fff; background: rgba(0,0,0,0.28); padding:.28rem .75rem; border-radius:8px;
-  font-weight:600; z-index:11; backdrop-filter: blur(4px);
+  font-size:1.18rem; color:#fff; background: rgba(0,0,0,0.26); padding:.32rem .78rem; border-radius:8px;
+  font-weight:700; z-index:11; backdrop-filter: blur(4px);
 }
 .hero-title{
-  font-family:'Lobster',cursive; font-size: clamp(2.8rem, 10vw, 6rem); color:#fff; line-height:1; margin-top:.25rem;
-  text-shadow: 0 12px 36px rgba(0,0,0,.55);
-  z-index:11;
+  font-family:'Lobster',cursive; font-size: clamp(3rem, 10vw, 6rem); color:#fff; line-height:1; margin-top:.35rem;
+  text-shadow: 0 14px 44px rgba(0,0,0,.56); z-index:11;
 }
 
-/* Ticker: slower and clearer */
-.ticker{ margin-top:.45rem; z-index:11; width:min(920px,96%); margin-inline:auto; overflow:hidden; border-radius:10px; background: rgba(0,0,0,0.18); padding:.35rem .6rem; }
-.ticker .ticker-track{ display:inline-block; padding-left:100%; animation: ticker-scroll 22s linear infinite; color:#ffd86b; font-weight:800; font-size:1.05rem; letter-spacing:.2px; }
-.ticker .ticker-track:hover{ animation-play-state:paused; }
-@keyframes ticker-scroll{ 0%{ transform: translateX(0) } 100%{ transform: translateX(-100%) } }
+/* ===== SLANTED NEWS TICKER =====
+   Implement a slanted ribbon that scrolls text like a breaking news banner.
+*/
+.ticker-wrap{
+  position:relative; width:min(1100px,96%); margin-top:.6rem; z-index:11; height:56px;
+  display:flex; align-items:center; justify-content:center;
+  perspective: 800px;
+}
+.ticker-ribbon{
+  position:relative; width:100%; overflow:hidden; transform: rotate(-6deg); /* slant */
+  transform-origin:center left;
+}
+.ticker-inner{
+  display:inline-block; padding-left:100%; white-space:nowrap;
+  animation: ribbon-scroll 22s linear infinite;
+  color:#fff; font-weight:800; font-size:1.02rem; letter-spacing:.4px;
+  background: linear-gradient(90deg, rgba(142,45,226,.95), rgba(255,0,128,.95));
+  padding: .7rem 1.6rem;
+  border-radius:10px;
+  box-shadow: 0 12px 34px rgba(0,0,0,.28);
+}
+.ticker-inner:hover{ animation-play-state:paused; }
 
-/* ====== CTA CARD ====== */
+@keyframes ribbon-scroll{
+  0%{ transform: translateX(0%); }
+  100%{ transform: translateX(-100%); }
+}
+
+/* ===== CTA CARD ===== */
 .card-section{ padding:3rem 1rem; display:flex; justify-content:center; background:#fdf6e3 }
 .card{ background:#fff; color:#000; padding:2rem; border-radius:12px; max-width:920px; width:100%; box-shadow:0 14px 46px rgba(0,0,0,.08); text-align:center }
-.card h2{ color:#8e2de2; margin-bottom: .8rem; font-size:1.6rem }
+.card h2{ color:#8e2de2; margin-bottom:.8rem; font-size:1.6rem }
+.card .get-start-btn{ background: linear-gradient(90deg,#8e2de2,#ff0080); color:#fff; padding:.7rem 1.6rem; border-radius:10px; border:none; font-weight:800; }
 
-/* Get started button purple-pink */
-.card .get-start-btn{
-  background: linear-gradient(90deg,#8e2de2,#ff0080);
-  color:#fff; border:none; padding:.7rem 1.6rem; border-radius:10px; font-weight:800;
-  box-shadow:0 12px 34px rgba(142,45,226,.12);
-}
-
-/* ====== ABOUT ====== */
+/* ===== ABOUT (playcards) ===== */
 #about-section{ padding:3rem 1rem; background:#fdf6e3 }
-.about-container{ max-width:1100px; margin:0 auto; text-align:left; display:grid; gap:1rem }
-.about-hero{ background:#fff; padding:1.6rem; border-radius:12px; box-shadow:0 12px 30px rgba(0,0,0,.06) }
-.about-columns{ display:grid; gap:1rem; margin-top:1rem }
-.about-columns .col{ background:#fff; padding:1.1rem; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.05) }
-@media(min-width:880px){ .about-columns{ grid-template-columns: 1fr 1fr } }
+.about-container{ max-width:1200px; margin:0 auto; text-align:center; display:block; }
 
-/* ====== TESTIMONIALS (manual) ====== */
-.testimonial-area{ max-width:920px; margin:1.4rem auto 2rem; text-align:center }
-.testimonials{ position:relative; overflow:hidden; border-radius:12px; background:linear-gradient(180deg,#fff 0%, #fffdf6 100%); box-shadow:0 12px 40px rgba(0,0,0,.06) }
+/* intro */
+.about-intro{ max-width:940px; margin:0 auto 1.2rem; text-align:left; background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 12px 30px rgba(0,0,0,.06); }
+.about-intro h2{ color:#8e2de2; font-size:1.6rem; margin-bottom:.6rem; }
+.about-intro p{ color:#333; line-height:1.7; }
+
+/* playcard layout */
+.playcards{ display:grid; gap:1.15rem; margin-top:1.2rem; align-items:start; }
+@media(min-width: 980px){ .playcards{ grid-template-columns: repeat(3, 1fr); } }   /* 3 columns desktop */
+@media(min-width: 640px) and (max-width:979px){ .playcards{ grid-template-columns: repeat(2, 1fr); } } /* 2 columns tablet */
+@media(max-width:639px){ .playcards{ grid-template-columns: 1fr; } } /* 1 column mobile */
+
+/* Each card wrapper includes a headline above card */
+.playcard {
+  position:relative; background:transparent; padding-top:36px; /* space for icon overlap */
+}
+.playcard-title {
+  text-align:center; font-weight:800; color:#222; margin-bottom:.5rem; font-size:1.05rem;
+}
+/* the white card itself */
+.playcard-box {
+  background:#fff; border-radius:12px; padding:2rem 1rem 1.6rem; text-align:center;
+  box-shadow: 0 12px 30px rgba(0,0,0,.06); transition: transform .28s ease, box-shadow .28s ease;
+  min-height:160px; display:flex; align-items:center; justify-content:center; flex-direction:column;
+  position:relative; overflow:visible;
+}
+/* top-centered icon "sign" that sits on the card's top edge and partly overlaps */
+.playcard-badge {
+  position:absolute; top:-28px; left:50%; transform:translateX(-50%);
+  width:64px; height:64px; background:linear-gradient(180deg,#fff,#f6f6f8); border-radius:12px;
+  display:grid; place-items:center; font-size:1.8rem; box-shadow:0 8px 18px rgba(0,0,0,.12);
+  z-index:5;
+}
+/* icon "content" in the middle of badge */
+.playcard-badge span{ display:block; font-size:28px }
+
+/* center content inside card */
+.playcard-content{ text-align:center; color:#444; line-height:1.6; padding-top:6px; }
+
+/* hover glow (purple→pink) similar to your live design */
+.playcard-box:hover{ transform: translateY(-8px); box-shadow:0 22px 50px rgba(142,45,226,.14); }
+.playcard-box:hover .playcard-badge{ box-shadow:0 22px 50px rgba(255,0,128,.12) }
+
+/* ===== TESTIMONIALS ===== */
+.testimonial-area{ max-width:1000px; margin:1.6rem auto; text-align:center; padding:0 1rem; }
+.testimonials{ background:#fff; border-radius:12px; padding:1rem; box-shadow:0 12px 40px rgba(0,0,0,.06); overflow:hidden; }
 .testimonial-track{ display:flex; transition: transform 480ms cubic-bezier(.2,.9,.2,1); width:100%; }
-.testimonial-slide{ min-width:100%; padding:2rem; box-sizing:border-box; text-align:center }
-.testimonial-slide p{ font-size:1.05rem; line-height:1.7; color:#333; margin-bottom:.6rem }
-.testimonial-slide strong{ display:block; color:#8e2de2; margin-top:.5rem }
-.test-controls{ display:flex; justify-content:center; gap:12px; align-items:center; margin-top:.9rem }
-.btn-small{ background: linear-gradient(90deg,#8e2de2,#ff0080); color:#fff; padding:.55rem .95rem; border-radius:10px; border:none; font-weight:700; cursor:pointer; box-shadow:0 8px 22px rgba(142,45,226,.14) }
+.testimonial-slide{ min-width:100%; padding:1.6rem 1.2rem; box-sizing:border-box; text-align:center; }
+.testimonial-slide p{ font-size:1.05rem; color:#333; line-height:1.7; }
+.testimonial-slide strong{ display:block; color:#8e2de2; margin-top:.9rem; }
+.test-controls{ display:flex; justify-content:center; gap:12px; align-items:center; margin-top:.9rem; }
+.btn-small{ background: linear-gradient(90deg,#8e2de2,#ff0080); color:#fff; padding:.55rem .95rem; border-radius:10px; border:none; font-weight:700; cursor:pointer; }
 
 /* dots */
 .dots{ display:flex; justify-content:center; gap:8px; margin-top:.9rem }
 .dot{ width:9px; height:9px; border-radius:50%; background:#eee; cursor:pointer; transition:all 180ms }
 .dot.active{ background:#8e2de2; box-shadow:0 0 10px rgba(142,45,226,.35); transform:scale(1.06) }
 
-/* ====== FOOTER ====== */
+/* ===== FOOTER ===== */
 footer{ text-align:center; padding:1rem; background:#111; color:#fff; font-size:.95rem }
 
-/* small screens */
+/* small screen tweaks */
 @media(max-width:520px){
-  .logo-3d{ --size:150px }
-  .hero-title{ font-size: clamp(2rem, 10vw, 3.6rem) }
-  .ticker .ticker-track{ animation-duration:28s }
+  .logo-3d{ --size: 150px; }
+  .hero-title{ font-size: clamp(2rem, 10vw, 3.6rem); }
+  .ticker-inner{ padding:.6rem 1rem; font-size:.95rem; }
 }
 </style>
 </head>
@@ -216,7 +303,7 @@ footer{ text-align:center; padding:1rem; background:#111; color:#fff; font-size:
     <button class="get-start-btn" onclick="window.open('login.html','_blank')">Get Started</button>
   </div>
 
-  <!-- Hamburger (mobile) -->
+  <!-- Hamburger -->
   <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
     <span class="bar top"></span>
     <span class="bar mid"></span>
@@ -256,13 +343,15 @@ footer{ text-align:center; padding:1rem; background:#111; color:#fff; font-size:
     <div class="welcome">Welcome to …</div>
     <h1 class="hero-title">Sublime Logs</h1>
 
-    <div class="ticker" aria-hidden="false">
-      <div class="ticker-track">Connecting the world for better communication — Reliable SMS verification • Global gift sending • Secure & Private • Fast delivery</div>
+    <div class="ticker-wrap" aria-hidden="false">
+      <div class="ticker-ribbon">
+        <div class="ticker-inner">Connecting the world for better communication — Reliable SMS verification • Global gift sending • Secure & Private • Fast delivery</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- INTRO / CTA -->
+<!-- CTA -->
 <section class="card-section">
   <div class="card">
     <h2>Reliable SMS Numbers & International Gift Sending</h2>
@@ -274,42 +363,89 @@ footer{ text-align:center; padding:1rem; background:#111; color:#fff; font-size:
 <!-- ABOUT -->
 <section id="about-section">
   <div class="about-container">
-    <div class="about-hero">
-      <h2 style="color:#8e2de2; font-size:1.5rem">About Sublime Logs</h2>
-      <p style="margin-top:.6rem; color:#333; line-height:1.7">
-        Sublime Logs is a communication-first company focused on secure, reliable messaging and international gift delivery. We provide enterprise-grade, non-VoIP numbers for SMS verification, easy integrations, and a customer-first approach to global deliveries.
+    <div class="about-intro">
+      <h2>About Sublime Logs</h2>
+      <p>
+        Sublime Logs is your trusted partner for SMS verification and international gift sending.
+        We provide high-quality, non-VoIP phone numbers for instant verification codes anywhere in the world.
+        With our platform, sending gifts internationally has never been easier, connecting people and businesses globally.
       </p>
     </div>
 
-    <div class="about-columns" style="margin-top:1rem">
-      <div class="col">
-        <h3 style="color:#8e2de2; margin-bottom:.6rem">Our Services</h3>
-        <ul style="line-height:1.75; color:#333">
-          <li>• Non-VoIP phone numbers for SMS verification</li>
-          <li>• Global coverage across many countries</li>
-          <li>• International gift delivery with tracking</li>
-          <li>• Simple API & dashboard for developers</li>
-        </ul>
+    <div class="playcards">
+      <!-- Playcard 1 -->
+      <div class="playcard">
+        <div class="playcard-title">Reliable Numbers</div>
+        <div class="playcard-box">
+          <div class="playcard-badge"><span>📱</span></div>
+          <div class="playcard-content">High quality, non-VoIP numbers for instant SMS verification.</div>
+        </div>
       </div>
-      <div class="col">
-        <h3 style="color:#8e2de2; margin-bottom:.6rem">Why choose us</h3>
-        <ul style="line-height:1.75; color:#333">
-          <li>• Fast, real-time SMS delivery</li>
-          <li>• Strong privacy & secure handling</li>
-          <li>• 24/7 customer support</li>
-          <li>• Easy onboarding and integrations</li>
-        </ul>
+
+      <!-- Playcard 2 -->
+      <div class="playcard">
+        <div class="playcard-title">Global Coverage</div>
+        <div class="playcard-box">
+          <div class="playcard-badge"><span>🌍</span></div>
+          <div class="playcard-content">Numbers available in multiple countries for worldwide use.</div>
+        </div>
       </div>
+
+      <!-- Playcard 3 -->
+      <div class="playcard">
+        <div class="playcard-title">Secure & Private</div>
+        <div class="playcard-box">
+          <div class="playcard-badge"><span>🔒</span></div>
+          <div class="playcard-content">Your privacy is our priority with fully secure numbers.</div>
+        </div>
+      </div>
+
+      <!-- Playcard 4 -->
+      <div class="playcard">
+        <div class="playcard-title">Fast Delivery</div>
+        <div class="playcard-box">
+          <div class="playcard-badge"><span>⚡</span></div>
+          <div class="playcard-content">Receive SMS codes in real-time without delays.</div>
+        </div>
+      </div>
+
+      <!-- Playcard 5 -->
+      <div class="playcard">
+        <div class="playcard-title">Easy Integration</div>
+        <div class="playcard-box">
+          <div class="playcard-badge"><span>🔗</span></div>
+          <div class="playcard-content">Our numbers work seamlessly across all platforms.</div>
+        </div>
+      </div>
+
+      <!-- Playcard 6 -->
+      <div class="playcard">
+        <div class="playcard-title">Gift Sending</div>
+        <div class="playcard-box">
+          <div class="playcard-badge"><span>🎁</span></div>
+          <div class="playcard-content">Send gifts internationally with ease.</div>
+        </div>
+      </div>
+
+      <!-- Playcard 7 -->
+      <div class="playcard">
+        <div class="playcard-title">24/7 Support</div>
+        <div class="playcard-box">
+          <div class="playcard-badge"><span>🕒</span></div>
+          <div class="playcard-content">Our team is always available to assist you.</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="testimonial-area" aria-label="Testimonials" id="testimonial-area">
+<section class="testimonial-area" id="testimonial-area">
   <h2 style="text-align:center; color:#8e2de2; margin-bottom:.8rem">What Our Users Say</h2>
 
   <div class="testimonial-area-inner" style="max-width:960px;margin:0 auto;">
-    <div class="testimonials" id="testimonials">
+    <div class="testimonials">
       <div class="testimonial-track" id="testimonialTrack">
         <div class="testimonial-slide">
           <p>"Sublime Logs made SMS verification seamless and fast for our team. Truly professional!"</p>
@@ -365,30 +501,44 @@ footer{ text-align:center; padding:1rem; background:#111; color:#fff; font-size:
 </footer>
 
 <script>
-/* ====== MOBILE PANEL & HAMBURGER ====== */
+/* ===== Mobile menu (hamburger -> X) ===== */
 const hamburger = document.getElementById('hamburger');
 const mobilePanel = document.getElementById('mobilePanel');
 const mobileClose = document.getElementById('mobileClose');
-const navLinks = document.querySelector('.nav-links');
+const topBar = hamburger.querySelector('.top');
+const midBar = hamburger.querySelector('.mid');
+const botBar = hamburger.querySelector('.bot');
 
-function openMobile(){ mobilePanel.classList.add('show'); mobilePanel.setAttribute('aria-hidden','false'); hamburger.setAttribute('aria-expanded','true'); hamburger.querySelector('.top').style.transform = 'translateY(8px) rotate(45deg)'; hamburger.querySelector('.mid').style.opacity = '0'; hamburger.querySelector('.bot').style.transform = 'translateY(-8px) rotate(-45deg)'; }
-function closeMobile(){ mobilePanel.classList.remove('show'); mobilePanel.setAttribute('aria-hidden','true'); hamburger.setAttribute('aria-expanded','false'); hamburger.querySelector('.top').style.transform = ''; hamburger.querySelector('.mid').style.opacity = ''; hamburger.querySelector('.bot').style.transform = ''; }
-
+function openMobile() {
+  mobilePanel.classList.add('show');
+  mobilePanel.setAttribute('aria-hidden','false');
+  hamburger.setAttribute('aria-expanded','true');
+  topBar.style.transform = 'translateY(8px) rotate(45deg)';
+  midBar.style.opacity = '0';
+  botBar.style.transform = 'translateY(-8px) rotate(-45deg)';
+}
+function closeMobile() {
+  mobilePanel.classList.remove('show');
+  mobilePanel.setAttribute('aria-hidden','true');
+  hamburger.setAttribute('aria-expanded','false');
+  topBar.style.transform = '';
+  midBar.style.opacity = '';
+  botBar.style.transform = '';
+}
 hamburger.addEventListener('click', () => {
   if (mobilePanel.classList.contains('show')) closeMobile(); else openMobile();
 });
 if (mobileClose) mobileClose.addEventListener('click', closeMobile);
-// close when nav link clicked (mobile)
 document.querySelectorAll('.mobile-panel a').forEach(a => a.addEventListener('click', closeMobile));
-window.addEventListener('resize', () => { if(window.innerWidth > 840) closeMobile(); });
+window.addEventListener('resize', () => { if (window.innerWidth > 840) closeMobile(); });
 
-/* ====== PRELOAD HERO IMAGES ====== */
-['log1.jpeg','log2.jpeg','log3.jpeg','log4.jpeg','log5.jpeg','log6.jpeg'].forEach(src => { const i = new Image(); i.src = src; });
+/* ===== Preload hero images to avoid lag ===== */
+['log1.jpeg','log2.jpeg','log3.jpeg','log4.jpeg','log5.jpeg','log6.jpeg'].forEach(src => { const i=new Image(); i.src=src; });
 
-/* ====== HERO ROTATION (smooth) ====== */
+/* ===== Hero rotation (smooth) ===== */
 const bgSlides = Array.from(document.querySelectorAll('.bg-slide'));
 let activeIndex = 0;
-const heroInterval = 4500; // 4.5s
+const heroInterval = 4500;
 let heroTimer = null;
 
 function showHeroIndex(i){
@@ -406,21 +556,9 @@ function startHeroRotation(){
     showHeroIndex(next);
   }, heroInterval);
 }
+window.addEventListener('load', () => { showHeroIndex(0); setTimeout(startHeroRotation, 200); });
 
-window.addEventListener('load', () => {
-  showHeroIndex(0);
-  setTimeout(startHeroRotation, 250);
-});
-
-/* ====== TICKER: pause on hover ====== */
-const tickerTrack = document.querySelector('.ticker .ticker-track');
-if (tickerTrack){
-  const tickerEl = document.querySelector('.ticker');
-  tickerEl.addEventListener('mouseenter', () => tickerTrack.style.animationPlayState = 'paused');
-  tickerEl.addEventListener('mouseleave', () => tickerTrack.style.animationPlayState = 'running');
-}
-
-/* ====== TESTIMONIALS: manual (no autoplay) ====== */
+/* ===== Testimonial manual controls + dots ===== */
 const track = document.getElementById('testimonialTrack');
 let slidesLive = Array.from(track.children);
 let testIndex = 0;
@@ -440,11 +578,7 @@ function renderDots(){
   });
 }
 renderDots();
-
-function updateDots(){
-  const dots = Array.from(dotsContainer.children);
-  dots.forEach((d, idx) => d.classList.toggle('active', idx === testIndex));
-}
+function updateDots(){ const dots = Array.from(dotsContainer.children); dots.forEach((d, idx) => d.classList.toggle('active', idx === testIndex)); }
 
 function goToTest(n){
   if(n < 0) n = slidesLive.length - 1;
@@ -453,16 +587,14 @@ function goToTest(n){
   track.style.transform = `translateX(-${testIndex * 100}%)`;
   updateDots();
 }
-
-// Prev / Next handlers
 document.getElementById('prevTest').addEventListener('click', () => goToTest(testIndex - 1));
 document.getElementById('nextTest').addEventListener('click', () => goToTest(testIndex + 1));
-
-// initial
 goToTest(0);
 
-/* ====== Footer year ====== */
+/* ===== Ticker pause on hover (handled via CSS animation-play-state when hovered) ===== */
+
+/* ===== Year in footer ===== */
 document.getElementById('year').textContent = new Date().getFullYear();
 </script>
 </body>
-</html>
+                                                                                        </html>

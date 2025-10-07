@@ -3,201 +3,466 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Sublime Logs — Cinematic Home</title>
+<title>Sublime Logs — Home</title>
 
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Lobster&family=David+Libre:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'David Libre',serif;background:#fdf6e3;color:#111;}
-a{text-decoration:none;color:inherit;}
+/* ====== RESET & BASE ====== */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family: 'David Libre', serif;
+  background:#fdf6e3; color:#111;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+a{color:inherit;text-decoration:none}
 
-/* NAVBAR */
+/* ====== NAVBAR ====== */
 nav{
-  position:sticky;top:0;z-index:1000;
-  background:linear-gradient(90deg,#8e2de2,#ff0080);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:.9rem 2rem;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.25);
+  position:sticky; top:0; z-index:4000;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:.9rem 1.5rem; gap:1rem;
+  background: linear-gradient(90deg,#8e2de2 0%,#ff0080 100%);
+  box-shadow:0 6px 18px rgba(0,0,0,.25);
 }
-.brand{font-family:'Lobster',cursive;font-size:1.6rem;color:#fff;}
-nav ul{list-style:none;display:flex;gap:2rem;}
-nav ul li a{color:#fff;font-weight:700;}
-nav ul li a:hover{color:#ffd700;text-shadow:0 0 10px #ffd700;}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
-.hamburger div{width:26px;height:3px;background:#fff;border-radius:2px;transition:.3s;}
-.hamburger.active div:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
-.hamburger.active div:nth-child(2){opacity:0;}
-.hamburger.active div:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+.brand { display:flex; align-items:center; gap:.5rem; color:#fff; font-weight:700; }
+.brand .mini { font-family:'Lobster',cursive; font-size:1.35rem; }
+.nav-links { display:flex; gap:1.9rem; align-items:center; margin-inline:auto; }
+.nav-links a { color:#fff; font-weight:700; padding:.25rem; transition: all 160ms; }
+.nav-links a:hover { color:#ffd700; text-shadow:0 0 8px rgba(255,215,0,.9); }
+
+/* Get started button (purple-pink gradient) */
+.get-start-btn{
+  background: linear-gradient(90deg,#8e2de2,#ff0080);
+  color:#fff; border:none; padding:.6rem 1rem; border-radius:10px; font-weight:800;
+  box-shadow: 0 10px 28px rgba(142,45,226,.18);
+}
+.get-start-btn:hover{ transform:translateY(-3px); box-shadow:0 18px 40px rgba(255,0,128,.18); }
+
+/* Hamburger (mobile) */
+.hamburger{ display:none; width:46px; height:40px; align-items:center; justify-content:center; cursor:pointer; background:transparent; border:none; }
+.hamburger .bar{ width:28px; height:3px; background:#fff; border-radius:3px; display:block; transition:transform .25s,opacity .25s; }
+.hamburger .bar.mid{ margin:6px 0; width:18px; transition:width .25s .05s; }
+
 @media(max-width:840px){
-  nav ul{
-    position:fixed;top:0;right:-100%;height:100%;
-    width:70%;background:#2c003e;flex-direction:column;
-    padding-top:6rem;transition:right .3s;
-  }
-  nav ul.show{right:0;}
-  .hamburger{display:flex;}
+  .nav-links{ display:none; }
+  .hamburger{ display:flex; }
 }
 
-/* HERO */
+/* ====== MOBILE PANEL ====== */
+.mobile-panel{
+  position:fixed; top:0; right:-100%; width:78%; max-width:380px; height:100%; background:#2c003e;
+  padding:2.5rem 1.5rem; display:flex; flex-direction:column; gap:1rem; transition:right .32s cubic-bezier(.2,.9,.3,1);
+  z-index:4100;
+}
+.mobile-panel.show{ right:0; }
+.mobile-panel a{ color:#fff; font-weight:700; font-size:1.05rem; display:block; padding:.6rem 0; }
+.mobile-close{ position:absolute; right:12px; top:12px; background:transparent; border:none; color:#fff; font-size:28px; cursor:pointer; }
+
+/* ====== HERO ====== */
 .hero{
-  position:relative;height:72vh;min-height:440px;
-  display:flex;align-items:flex-start;justify-content:center;
-  text-align:center;padding-top:2rem;overflow:hidden;
-  background:linear-gradient(135deg,#f2eaff 0%,#e4d4ff 100%);
-  color:#111;
+  position:relative; height:74vh; min-height:480px;
+  display:flex; align-items:flex-start; justify-content:center;
+  text-align:center; overflow:hidden; padding-top:2.2rem;
+  /* background fallback if images missing */
+  background: linear-gradient(135deg,#f2eaff 0%,#e4d4ff 100%);
+  color:#fff;
+  isolation:isolate;
 }
-.bg-wrap{position:absolute;inset:0;z-index:1;}
-.bg-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s ease-in-out;filter:brightness(.9) contrast(1.05) saturate(1.1);}
-.bg-slide.active{opacity:1;}
-.hero::after{content:"";position:absolute;inset:0;z-index:3;background:rgba(0,0,0,0.1);}
-.logo-holder{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:.8rem;margin-top:-1rem;}
+
+/* background slides (brighter, less dark) */
+.bg-wrap{ position:absolute; inset:0; z-index:1; overflow:hidden; }
+.bg-slide{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  opacity:0; transition:opacity 1000ms cubic-bezier(.2,.9,.2,1);
+  will-change:opacity; filter:brightness(1) contrast(1.02) saturate(1.08);
+}
+.bg-slide.active{ opacity:1; }
+
+/* overlay (very light to protect readability) */
+.hero::after {
+  content:""; position:absolute; inset:0; z-index:3;
+  background: linear-gradient(180deg, rgba(0,0,0,0.08) 8%, rgba(0,0,0,0.10) 45%, rgba(0,0,0,0.14) 100%);
+  pointer-events:none;
+}
+
+/* ====== LOGO HOLDER (moved up & constrained glow) ====== */
+.logo-holder{
+  position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; gap:.6rem;
+  margin-top:-3.2rem; /* move it up more */
+  width:100%; max-width:1100px; padding: 0 1rem;
+}
+
+/* smaller pulse radius so it doesn't flood images */
 .logo-holder::before{
-  content:"";position:absolute;inset:-40%;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,180,60,0.25),rgba(0,0,0,0));
-  filter:blur(45px);animation:pulse 10s ease-in-out infinite;mix-blend-mode:screen;z-index:0;
-}
-@keyframes pulse{
-  0%,100%{opacity:.6;transform:scale(1);background:radial-gradient(circle,rgba(255,180,60,0.25),rgba(0,0,0,0));}
-  50%{opacity:1;transform:scale(1.15);background:radial-gradient(circle,rgba(60,180,255,0.25),rgba(0,0,0,0));}
-}
-
-/* 3D LOGO */
-.logo-3d{--size:180px;width:var(--size);height:var(--size);display:grid;place-items:center;position:relative;transform-style:preserve-3d;animation:logo-roll 8s linear infinite;}
-.logo-3d .s{font-family:'Lobster',cursive;font-size:calc(var(--size)*0.9);background:linear-gradient(120deg,#ffd86b,#ffb84d,#fff6d6);-webkit-background-clip:text;color:transparent;text-shadow:0 2px 0 rgba(0,0,0,.2),0 12px 30px rgba(0,0,0,.5);}
-@keyframes logo-roll{
-  0%{transform:rotateY(-8deg) rotateX(6deg);}
-  50%{transform:rotateY(8deg) rotateX(6deg);}
-  100%{transform:rotateY(-8deg) rotateX(6deg);}
+  content:""; position:absolute; left:50%; top:18%; transform:translateX(-50%);
+  width:520px; height:520px; border-radius:50%;
+  background: radial-gradient(circle, rgba(255,180,60,0.25), rgba(0,0,0,0));
+  filter: blur(36px); opacity:0.95; z-index:-1; mix-blend-mode:screen;
+  transition:all .4s;
+  pointer-events:none;
 }
 
-/* HERO TEXT */
-.welcome{font-size:1.1rem;color:#444;background:rgba(255,255,255,.5);padding:.25rem .6rem;border-radius:6px;}
-.hero-title{font-family:'Lobster',cursive;font-size:clamp(3rem,8vw,5rem);color:#8e2de2;}
-.ticker{margin-top:.3rem;font-weight:700;color:#ff9900;overflow:hidden;white-space:nowrap;}
-.ticker-track{display:inline-block;padding-left:100%;animation:scrollText 20s linear infinite;}
-@keyframes scrollText{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}
+/* subtle color cycle for the pulse */
+@keyframes pulse-swap {
+  0% { background: radial-gradient(circle, rgba(255,180,60,0.28), rgba(0,0,0,0)); }
+  48% { background: radial-gradient(circle, rgba(60,180,255,0.24), rgba(0,0,0,0)); }
+  100% { background: radial-gradient(circle, rgba(255,180,60,0.28), rgba(0,0,0,0)); }
+}
+.logo-holder::before { animation: pulse-swap 10s linear infinite; }
 
-/* ABOUT */
-section#about-section{padding:3.5rem 1rem;background:#fdf6e3;}
-.about-container{max-width:1200px;margin:0 auto;text-align:center;}
-.about-container h2{color:#8e2de2;font-size:2.2rem;margin-bottom:1rem;}
-.about-card{background:#fff;border-radius:12px;padding:2rem;margin-bottom:1.5rem;box-shadow:0 8px 20px rgba(0,0,0,.1);}
-.about-card h3{color:#222;font-size:1.6rem;margin-bottom:.6rem;}
-.about-card p{color:#333;line-height:1.7;}
+/* ====== 3D S LOGO ====== */
+.logo-3d{
+  --size: clamp(160px, 20vw, 260px);
+  width:var(--size); height:var(--size); display:grid; place-items:center; position:relative; transform-style:preserve-3d;
+  filter: drop-shadow(0 28px 48px rgba(0,0,0,.45));
+  margin-bottom:.2rem;
+  z-index:11;
+  animation:logo-roll 8.5s linear infinite;
+}
+.logo-3d .s{
+  font-family:'Lobster',cursive; font-size: calc(var(--size)*0.9);
+  color:transparent; -webkit-background-clip:text; background-clip:text;
+  background: linear-gradient(120deg,#ffd86b 0%, #ffb84d 32%, #fff6d6 58%, #ffd86b 100%);
+  text-shadow: 0 6px 22px rgba(0,0,0,.45);
+  display:inline-block;
+}
+/* small sheen */
+.logo-3d .s::after{
+  content:""; position:absolute; inset:0; z-index:5;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 45%, rgba(255,255,255,0.12) 55%, rgba(255,255,255,0) 100%);
+  mix-blend-mode: screen; transform: translateX(-140%) skewX(-14deg); animation: sheen 2.8s linear infinite;
+}
+@keyframes sheen{ 0%{transform:translateX(-140%) skewX(-14deg); opacity:0} 8%,48%{opacity:.9} 100%{transform:translateX(140%) skewX(-14deg); opacity:0} }
+@keyframes logo-roll{ 0%{ transform: rotateY(-8deg) rotateX(6deg) rotateZ(-1deg) } 50%{ transform: rotateY(6deg) rotateX(8deg) rotateZ(1deg) } 100%{ transform: rotateY(-8deg) rotateX(6deg) rotateZ(-1deg) } }
 
-/* TESTIMONIALS */
-.testimonial-area{max-width:900px;margin:0 auto;}
-.testimonials{background:#fff;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.08);padding:2rem;position:relative;}
-.testimonial-slide{display:none;}
-.testimonial-slide.active{display:block;}
-.testimonial-slide p{font-size:1.05rem;line-height:1.7;margin-bottom:.5rem;}
-.testimonial-slide strong{color:#8e2de2;}
-.testimonial-nav{margin-top:1rem;display:flex;justify-content:center;gap:1rem;}
-.testimonial-nav button{background:#8e2de2;color:#fff;border:none;padding:.5rem 1rem;border-radius:6px;cursor:pointer;}
-.testimonial-nav button:hover{background:#ff0080;}
+/* ====== HERO TEXT (bigger, clearer) ====== */
+.welcome{
+  font-size:1.15rem; color:#fff; background: rgba(0,0,0,0.28); padding:.28rem .75rem; border-radius:8px;
+  font-weight:600; z-index:11; backdrop-filter: blur(4px);
+}
+.hero-title{
+  font-family:'Lobster',cursive; font-size: clamp(2.8rem, 10vw, 6rem); color:#fff; line-height:1; margin-top:.25rem;
+  text-shadow: 0 12px 36px rgba(0,0,0,.55);
+  z-index:11;
+}
 
-/* FOOTER */
-footer{text-align:center;padding:1rem;background:#2c003e;color:#fff;font-size:.9rem;}
+/* Ticker: slower and clearer */
+.ticker{ margin-top:.45rem; z-index:11; width:min(920px,96%); margin-inline:auto; overflow:hidden; border-radius:10px; background: rgba(0,0,0,0.18); padding:.35rem .6rem; }
+.ticker .ticker-track{ display:inline-block; padding-left:100%; animation: ticker-scroll 22s linear infinite; color:#ffd86b; font-weight:800; font-size:1.05rem; letter-spacing:.2px; }
+.ticker .ticker-track:hover{ animation-play-state:paused; }
+@keyframes ticker-scroll{ 0%{ transform: translateX(0) } 100%{ transform: translateX(-100%) } }
+
+/* ====== CTA CARD ====== */
+.card-section{ padding:3rem 1rem; display:flex; justify-content:center; background:#fdf6e3 }
+.card{ background:#fff; color:#000; padding:2rem; border-radius:12px; max-width:920px; width:100%; box-shadow:0 14px 46px rgba(0,0,0,.08); text-align:center }
+.card h2{ color:#8e2de2; margin-bottom: .8rem; font-size:1.6rem }
+
+/* Get started button purple-pink */
+.card .get-start-btn{
+  background: linear-gradient(90deg,#8e2de2,#ff0080);
+  color:#fff; border:none; padding:.7rem 1.6rem; border-radius:10px; font-weight:800;
+  box-shadow:0 12px 34px rgba(142,45,226,.12);
+}
+
+/* ====== ABOUT ====== */
+#about-section{ padding:3rem 1rem; background:#fdf6e3 }
+.about-container{ max-width:1100px; margin:0 auto; text-align:left; display:grid; gap:1rem }
+.about-hero{ background:#fff; padding:1.6rem; border-radius:12px; box-shadow:0 12px 30px rgba(0,0,0,.06) }
+.about-columns{ display:grid; gap:1rem; margin-top:1rem }
+.about-columns .col{ background:#fff; padding:1.1rem; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.05) }
+@media(min-width:880px){ .about-columns{ grid-template-columns: 1fr 1fr } }
+
+/* ====== TESTIMONIALS (manual) ====== */
+.testimonial-area{ max-width:920px; margin:1.4rem auto 2rem; text-align:center }
+.testimonials{ position:relative; overflow:hidden; border-radius:12px; background:linear-gradient(180deg,#fff 0%, #fffdf6 100%); box-shadow:0 12px 40px rgba(0,0,0,.06) }
+.testimonial-track{ display:flex; transition: transform 480ms cubic-bezier(.2,.9,.2,1); width:100%; }
+.testimonial-slide{ min-width:100%; padding:2rem; box-sizing:border-box; text-align:center }
+.testimonial-slide p{ font-size:1.05rem; line-height:1.7; color:#333; margin-bottom:.6rem }
+.testimonial-slide strong{ display:block; color:#8e2de2; margin-top:.5rem }
+.test-controls{ display:flex; justify-content:center; gap:12px; align-items:center; margin-top:.9rem }
+.btn-small{ background: linear-gradient(90deg,#8e2de2,#ff0080); color:#fff; padding:.55rem .95rem; border-radius:10px; border:none; font-weight:700; cursor:pointer; box-shadow:0 8px 22px rgba(142,45,226,.14) }
+
+/* dots */
+.dots{ display:flex; justify-content:center; gap:8px; margin-top:.9rem }
+.dot{ width:9px; height:9px; border-radius:50%; background:#eee; cursor:pointer; transition:all 180ms }
+.dot.active{ background:#8e2de2; box-shadow:0 0 10px rgba(142,45,226,.35); transform:scale(1.06) }
+
+/* ====== FOOTER ====== */
+footer{ text-align:center; padding:1rem; background:#111; color:#fff; font-size:.95rem }
+
+/* small screens */
+@media(max-width:520px){
+  .logo-3d{ --size:150px }
+  .hero-title{ font-size: clamp(2rem, 10vw, 3.6rem) }
+  .ticker .ticker-track{ animation-duration:28s }
+}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <div class="brand">Sublime Logs</div>
-  <ul id="nav-links">
-    <li><a href="#">Home</a></li>
-    <li><a href="#about-section">About</a></li>
-    <li><a href="#testimonials">Testimonials</a></li>
-    <li><a href="login.html" target="_blank">Login</a></li>
-  </ul>
-  <div class="hamburger" id="hamburger">
-    <div></div><div></div><div></div>
+  <div class="brand"><span class="mini">Sublime</span><span>Logs</span></div>
+
+  <div class="nav-links" role="navigation" aria-label="Main navigation">
+    <a href="#">Home</a>
+    <a href="#about-section">About</a>
+    <a href="#testimonial-area">Testimonials</a>
+    <a href="register.html" target="_blank">Register/Sign In</a>
+    <a href="login.html" target="_blank">Login</a>
+    <button class="get-start-btn" onclick="window.open('login.html','_blank')">Get Started</button>
+  </div>
+
+  <!-- Hamburger (mobile) -->
+  <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span class="bar top"></span>
+    <span class="bar mid"></span>
+    <span class="bar bot"></span>
+  </button>
+
+  <!-- Mobile panel -->
+  <div class="mobile-panel" id="mobilePanel" aria-hidden="true">
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">&times;</button>
+    <a href="#" onclick="closeMobile()">Home</a>
+    <a href="#about-section" onclick="closeMobile()">About</a>
+    <a href="#testimonial-area" onclick="closeMobile()">Testimonials</a>
+    <a href="register.html" target="_blank" onclick="closeMobile()">Register/Sign In</a>
+    <a href="login.html" target="_blank" onclick="closeMobile()">Login</a>
+    <div style="margin-top:1rem">
+      <button class="get-start-btn" style="width:100%" onclick="window.open('login.html','_blank')">Get Started</button>
+    </div>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero" aria-label="Hero section">
   <div class="bg-wrap" aria-hidden="true">
-    <img src="log1.jpeg" class="bg-slide active" alt="">
-    <img src="log2.jpeg" class="bg-slide" alt="">
-    <img src="log3.jpeg" class="bg-slide" alt="">
-    <img src="log4.jpeg" class="bg-slide" alt="">
-    <img src="log5.jpeg" class="bg-slide" alt="">
-    <img src="log6.jpeg" class="bg-slide" alt="">
+    <img src="log1.jpeg" class="bg-slide active" alt="slide 1">
+    <img src="log2.jpeg" class="bg-slide" alt="slide 2">
+    <img src="log3.jpeg" class="bg-slide" alt="slide 3">
+    <img src="log4.jpeg" class="bg-slide" alt="slide 4">
+    <img src="log5.jpeg" class="bg-slide" alt="slide 5">
+    <img src="log6.jpeg" class="bg-slide" alt="slide 6">
   </div>
 
-  <div class="logo-holder">
-    <div class="logo-3d"><div class="s" data-s="S">S</div></div>
+  <div class="logo-holder" role="group" aria-label="Brand">
+    <div class="logo-3d" aria-hidden="false" role="img" aria-label="Sublime Logs logo">
+      <div class="s" data-s="S">S</div>
+    </div>
+
     <div class="welcome">Welcome to …</div>
     <h1 class="hero-title">Sublime Logs</h1>
-    <div class="ticker"><div class="ticker-track">Connecting the world for better communication — Reliable SMS verification • Global gift sending • Secure & Private • Fast delivery</div></div>
+
+    <div class="ticker" aria-hidden="false">
+      <div class="ticker-track">Connecting the world for better communication — Reliable SMS verification • Global gift sending • Secure & Private • Fast delivery</div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO / CTA -->
+<section class="card-section">
+  <div class="card">
+    <h2>Reliable SMS Numbers & International Gift Sending</h2>
+    <p>Buy high-quality, non-VoIP phone numbers for SMS verification worldwide. Sublime Logs ensures compatibility with multiple services, providing a secure, hassle-free way to receive verification codes instantly. We also make it easy to send gift items internationally to anyone, anywhere.</p>
+    <button class="get-start-btn" onclick="window.open('login.html','_blank')">Get Started</button>
   </div>
 </section>
 
 <!-- ABOUT -->
 <section id="about-section">
   <div class="about-container">
-    <h2>Reliable SMS Numbers & International Gift Sending</h2>
-    <div class="about-card">
-      <h3>About Sublime Logs</h3>
-      <p>Sublime Logs is your trusted partner for SMS verification and international gift sending. We provide high-quality, non-VoIP phone numbers for instant verification codes anywhere in the world. With our platform, sending gifts internationally has never been easier.</p>
+    <div class="about-hero">
+      <h2 style="color:#8e2de2; font-size:1.5rem">About Sublime Logs</h2>
+      <p style="margin-top:.6rem; color:#333; line-height:1.7">
+        Sublime Logs is a communication-first company focused on secure, reliable messaging and international gift delivery. We provide enterprise-grade, non-VoIP numbers for SMS verification, easy integrations, and a customer-first approach to global deliveries.
+      </p>
+    </div>
+
+    <div class="about-columns" style="margin-top:1rem">
+      <div class="col">
+        <h3 style="color:#8e2de2; margin-bottom:.6rem">Our Services</h3>
+        <ul style="line-height:1.75; color:#333">
+          <li>• Non-VoIP phone numbers for SMS verification</li>
+          <li>• Global coverage across many countries</li>
+          <li>• International gift delivery with tracking</li>
+          <li>• Simple API & dashboard for developers</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3 style="color:#8e2de2; margin-bottom:.6rem">Why choose us</h3>
+        <ul style="line-height:1.75; color:#333">
+          <li>• Fast, real-time SMS delivery</li>
+          <li>• Strong privacy & secure handling</li>
+          <li>• 24/7 customer support</li>
+          <li>• Easy onboarding and integrations</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section id="testimonials" style="padding:2rem 1rem;background:#fdf6e3;">
-  <div class="testimonial-area">
-    <div class="testimonials">
-      <div class="testimonial-slide active"><p>"Sublime Logs made SMS verification seamless and fast for our team. Truly professional!"</p><strong>- Fola Logs</strong></div>
-      <div class="testimonial-slide"><p>"Reliable numbers and amazing customer support. I trust Sublime Logs for all my verification needs."</p><strong>- OMN TV</strong></div>
-      <div class="testimonial-slide"><p>"Gift sending internationally has never been easier. Sublime Logs is simply the best!"</p><strong>- Kenny Konnect TV</strong></div>
+<section class="testimonial-area" aria-label="Testimonials" id="testimonial-area">
+  <h2 style="text-align:center; color:#8e2de2; margin-bottom:.8rem">What Our Users Say</h2>
+
+  <div class="testimonial-area-inner" style="max-width:960px;margin:0 auto;">
+    <div class="testimonials" id="testimonials">
+      <div class="testimonial-track" id="testimonialTrack">
+        <div class="testimonial-slide">
+          <p>"Sublime Logs made SMS verification seamless and fast for our team. Truly professional!"</p>
+          <strong>- Fola Logs</strong>
+        </div>
+        <div class="testimonial-slide">
+          <p>"Reliable numbers and amazing customer support. I trust Sublime Logs for all my verification needs."</p>
+          <strong>- OMN TV</strong>
+        </div>
+        <div class="testimonial-slide">
+          <p>"Gift sending internationally has never been easier. Sublime Logs is simply the best!"</p>
+          <strong>- Kenny Konnect TV</strong>
+        </div>
+        <div class="testimonial-slide">
+          <p>"Fast, secure, and easy to use. Sublime Logs is my go-to for SMS verification."</p>
+          <strong>- Jane A., Tech Entrepreneur</strong>
+        </div>
+        <div class="testimonial-slide">
+          <p>"We integrated Sublime Logs into our onboarding flow and saw fewer verification failures — excellent service."</p>
+          <strong>- BrightPay</strong>
+        </div>
+        <div class="testimonial-slide">
+          <p>"International gift delivery was fast and tracked. Recipients loved the packaging and speed."</p>
+          <strong>- Global Gift Co.</strong>
+        </div>
+        <div class="testimonial-slide">
+          <p>"Great uptime and the numbers arrive reliably. Our QA team uses them every day for testing."</p>
+          <strong>- QA Labs</strong>
+        </div>
+        <div class="testimonial-slide">
+          <p>"Support was prompt and helped us troubleshoot a tricky verification flow within minutes."</p>
+          <strong>- E-commerce Team</strong>
+        </div>
+        <div class="testimonial-slide">
+          <p>"Excellent coverage across countries and the API was simple to integrate. Highly recommended."</p>
+          <strong>- DevOps Collective</strong>
+        </div>
+      </div>
     </div>
-    <div class="testimonial-nav">
-      <button id="prevTest">Prev</button>
-      <button id="nextTest">Next</button>
+
+    <div class="test-controls" role="group" aria-label="Testimonial controls">
+      <button class="btn-small" id="prevTest" aria-label="Previous testimonial">Prev</button>
+      <div class="dots" id="testimonialDots" aria-hidden="false"></div>
+      <button class="btn-small" id="nextTest" aria-label="Next testimonial">Next</button>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  © 2025 Sublime Logs — Designed by Sublime Tech Team
+  <div>© <span id="year"></span> Sublime Logs. All Rights Reserved.</div>
+  <div style="margin-top:.35rem">Design by Sublime Tech Team</div>
 </footer>
 
 <script>
-/* NAV MENU */
-const hamburger=document.getElementById('hamburger');
-const navLinks=document.getElementById('nav-links');
-hamburger.addEventListener('click',()=>{
-  hamburger.classList.toggle('active');
-  navLinks.classList.toggle('show');
+/* ====== MOBILE PANEL & HAMBURGER ====== */
+const hamburger = document.getElementById('hamburger');
+const mobilePanel = document.getElementById('mobilePanel');
+const mobileClose = document.getElementById('mobileClose');
+const navLinks = document.querySelector('.nav-links');
+
+function openMobile(){ mobilePanel.classList.add('show'); mobilePanel.setAttribute('aria-hidden','false'); hamburger.setAttribute('aria-expanded','true'); hamburger.querySelector('.top').style.transform = 'translateY(8px) rotate(45deg)'; hamburger.querySelector('.mid').style.opacity = '0'; hamburger.querySelector('.bot').style.transform = 'translateY(-8px) rotate(-45deg)'; }
+function closeMobile(){ mobilePanel.classList.remove('show'); mobilePanel.setAttribute('aria-hidden','true'); hamburger.setAttribute('aria-expanded','false'); hamburger.querySelector('.top').style.transform = ''; hamburger.querySelector('.mid').style.opacity = ''; hamburger.querySelector('.bot').style.transform = ''; }
+
+hamburger.addEventListener('click', () => {
+  if (mobilePanel.classList.contains('show')) closeMobile(); else openMobile();
 });
+if (mobileClose) mobileClose.addEventListener('click', closeMobile);
+// close when nav link clicked (mobile)
+document.querySelectorAll('.mobile-panel a').forEach(a => a.addEventListener('click', closeMobile));
+window.addEventListener('resize', () => { if(window.innerWidth > 840) closeMobile(); });
 
-/* HERO IMAGE ROTATION */
-const slides=document.querySelectorAll('.bg-slide');
-let idx=0;
-setInterval(()=>{
-  slides[idx].classList.remove('active');
-  idx=(idx+1)%slides.length;
-  slides[idx].classList.add('active');
-},4500);
+/* ====== PRELOAD HERO IMAGES ====== */
+['log1.jpeg','log2.jpeg','log3.jpeg','log4.jpeg','log5.jpeg','log6.jpeg'].forEach(src => { const i = new Image(); i.src = src; });
 
-/* TESTIMONIAL MANUAL */
-const slidesTest=document.querySelectorAll('.testimonial-slide');
-let tIndex=0;
-function showTest(i){
-  slidesTest.forEach((s,idx)=>s.classList.toggle('active',idx===i));
+/* ====== HERO ROTATION (smooth) ====== */
+const bgSlides = Array.from(document.querySelectorAll('.bg-slide'));
+let activeIndex = 0;
+const heroInterval = 4500; // 4.5s
+let heroTimer = null;
+
+function showHeroIndex(i){
+  if(!bgSlides.length) return;
+  bgSlides.forEach((el, idx) => {
+    if(idx === i){ el.classList.add('active'); el.style.zIndex = 1; } else { el.classList.remove('active'); el.style.zIndex = 0; }
+  });
+  activeIndex = i;
 }
-document.getElementById('nextTest').addEventListener('click',()=>{
-  tIndex=(tIndex+1)%slidesTest.length;
-  showTest(tIndex);
+
+function startHeroRotation(){
+  clearInterval(heroTimer);
+  heroTimer = setInterval(() => {
+    const next = (activeIndex + 1) % bgSlides.length;
+    showHeroIndex(next);
+  }, heroInterval);
+}
+
+window.addEventListener('load', () => {
+  showHeroIndex(0);
+  setTimeout(startHeroRotation, 250);
 });
-document.getElementById('prevTest').addEventListener('click',()=>{
-  tIndex=(tIndex-1+slidesTest.length)%slidesTest.length;
-  showTest(tIndex);
-});
+
+/* ====== TICKER: pause on hover ====== */
+const tickerTrack = document.querySelector('.ticker .ticker-track');
+if (tickerTrack){
+  const tickerEl = document.querySelector('.ticker');
+  tickerEl.addEventListener('mouseenter', () => tickerTrack.style.animationPlayState = 'paused');
+  tickerEl.addEventListener('mouseleave', () => tickerTrack.style.animationPlayState = 'running');
+}
+
+/* ====== TESTIMONIALS: manual (no autoplay) ====== */
+const track = document.getElementById('testimonialTrack');
+let slidesLive = Array.from(track.children);
+let testIndex = 0;
+
+// render dots
+const dotsContainer = document.getElementById('testimonialDots');
+function renderDots(){
+  dotsContainer.innerHTML = '';
+  slidesLive.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = i === 0 ? 'dot active' : 'dot';
+    d.setAttribute('role','button');
+    d.setAttribute('tabindex','0');
+    d.addEventListener('click', () => goToTest(i));
+    d.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') goToTest(i); });
+    dotsContainer.appendChild(d);
+  });
+}
+renderDots();
+
+function updateDots(){
+  const dots = Array.from(dotsContainer.children);
+  dots.forEach((d, idx) => d.classList.toggle('active', idx === testIndex));
+}
+
+function goToTest(n){
+  if(n < 0) n = slidesLive.length - 1;
+  if(n >= slidesLive.length) n = 0;
+  testIndex = n;
+  track.style.transform = `translateX(-${testIndex * 100}%)`;
+  updateDots();
+}
+
+// Prev / Next handlers
+document.getElementById('prevTest').addEventListener('click', () => goToTest(testIndex - 1));
+document.getElementById('nextTest').addEventListener('click', () => goToTest(testIndex + 1));
+
+// initial
+goToTest(0);
+
+/* ====== Footer year ====== */
+document.getElementById('year').textContent = new Date().getFullYear();
 </script>
 </body>
 </html>

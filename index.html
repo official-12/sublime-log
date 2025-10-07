@@ -1,600 +1,367 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Sublime Logs — Home</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sublime Logs</title>
 
-<!-- Fonts -->
+<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Lobster&family=David+Libre:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* ===== Reset & Base ===== */
+/* ===== BASIC RESET ===== */
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{
-  font-family: 'David Libre', serif;
-  background:#fdf6e3; color:#111;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-}
+body{font-family:'David Libre',serif;background:#fdf6e3;color:#111;}
 
-/* ===== NAV ===== */
+/* ===== MENU BAR ===== */
 nav{
-  position:sticky; top:0; z-index:6000;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:.9rem 1.5rem; gap:1rem;
-  background: linear-gradient(90deg,#8e2de2 0%,#ff0080 100%);
+  position:sticky;top:0;z-index:5000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 1.5rem;gap:1rem;
+  background:linear-gradient(90deg,#8e2de2 0%,#ff0080 100%);
   box-shadow:0 8px 24px rgba(0,0,0,.22);
 }
-.brand { display:flex; align-items:center; gap:.5rem; color:#fff; font-weight:700; }
-.brand .mini { font-family:'Lobster',cursive; font-size:1.35rem; }
-.nav-links { display:flex; gap:1.9rem; align-items:center; margin-inline:auto; }
-.nav-links a { color:#fff; font-weight:700; padding:.25rem; }
-.nav-links a:hover { color:#ffd700; text-shadow:0 0 8px rgba(255,215,0,.9); }
-
-/* CTA button in nav */
+.brand{display:flex;align-items:center;gap:.5rem;color:#fff;font-weight:700;}
+.brand .mini{font-family:'Lobster',cursive;font-size:1.35rem;}
+.nav-links{display:flex;gap:1.9rem;align-items:center;margin-inline:auto;}
+.nav-links a{color:#fff;font-weight:700;padding:.25rem;}
+.nav-links a:hover{color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,.9);}
 .get-start-btn{
-  background: linear-gradient(90deg,#8e2de2,#ff0080);
-  color:#fff; border:none; padding:.55rem .9rem; border-radius:9px; font-weight:800;
-  box-shadow: 0 8px 28px rgba(142,45,226,.12);
+  background:linear-gradient(90deg,#8e2de2,#ff0080);
+  color:#fff;border:none;padding:.55rem .9rem;border-radius:9px;font-weight:800;
 }
 
 /* Hamburger */
-.hamburger{ display:none; width:46px; height:40px; align-items:center; justify-content:center; cursor:pointer; border:none; background:transparent; }
-.hamburger .bar{ width:28px; height:3px; background:#fff; border-radius:3px; transition:transform .28s,opacity .28s; display:block; }
-.hamburger .bar.mid{ margin:6px 0; width:18px; transition:width .28s .05s; }
+.hamburger{display:none;width:46px;height:40px;align-items:center;justify-content:center;cursor:pointer;border:none;background:transparent;}
+.hamburger .bar{width:28px;height:3px;background:#fff;border-radius:3px;transition:transform .28s,opacity .28s;display:block;}
+.hamburger .bar.mid{margin:6px 0;width:18px;transition:width .28s .05s;}
 
 /* Mobile panel */
 .mobile-panel{
-  position:fixed; top:0; right:-100%; width:78%; max-width:380px; height:100%; background:#2c003e;
-  padding:2.5rem 1.5rem; display:flex; flex-direction:column; gap:1rem; transition:right .32s cubic-bezier(.2,.9,.3,1);
-  z-index:6100; color:#fff;
+  position:fixed;top:0;right:-100%;width:78%;max-width:380px;height:100%;background:#2c003e;
+  padding:2.5rem 1.5rem;display:flex;flex-direction:column;gap:1rem;transition:right .32s cubic-bezier(.2,.9,.3,1);
+  z-index:5100;color:#fff;
 }
-.mobile-panel.show{ right:0; }
-.mobile-panel a{ color:#fff; font-weight:700; font-size:1.05rem; display:block; padding:.6rem 0; }
-.mobile-close{ position:absolute; right:12px; top:12px; background:transparent; border:none; color:#fff; font-size:28px; cursor:pointer; }
+.mobile-panel.show{right:0;}
+.mobile-panel a{color:#fff;font-weight:700;font-size:1.05rem;display:block;padding:.6rem 0;}
+.mobile-close{position:absolute;right:12px;top:12px;background:transparent;border:none;color:#fff;font-size:28px;cursor:pointer;}
 
-/* Responsive nav */
 @media(max-width:840px){
-  .nav-links{ display:none; }
-  .hamburger{ display:flex; }
-  .brand { margin-right: .5rem; }
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
 }
 
-/* ===== HERO ===== */
-.hero{
-  position:relative; height:74vh; min-height:480px;
-  display:flex; align-items:flex-start; justify-content:center;
-  text-align:center; overflow:hidden; padding-top:2.6rem;
-  background: linear-gradient(135deg,#f2eaff 0%,#e8d8ff 100%);
-  isolation:isolate;
-}
-
-/* Background slides */
-.bg-wrap{ position:absolute; inset:0; z-index:1; overflow:hidden; }
-.bg-slide{
-  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-  opacity:0; transition:opacity 1000ms cubic-bezier(.2,.9,.2,1); will-change:opacity;
-  filter:brightness(1.02) contrast(1.04) saturate(1.06);
-}
-.bg-slide.active{ opacity:1; }
-
-/* Very light overlay for readability */
-.hero::after{
-  content:""; position:absolute; inset:0; z-index:3;
-  background: linear-gradient(180deg, rgba(0,0,0,0.06) 8%, rgba(0,0,0,0.08) 45%, rgba(0,0,0,0.12) 100%);
-  pointer-events:none;
-}
-
-/* Logo holder moved up; no external frame - logo stands alone */
-.logo-holder{
-  position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; gap:.55rem;
-  margin-top:-3.6rem; width:100%; max-width:1100px; padding:0 1rem;
-}
-
-/* ===== 3D ARTISTIC GOLD S =====
-   We use layered CSS to create metallic look + animated shimmer + flame glow.
-   No circular frame; glow confined to small area via pseudo-elements.
-*/
+/* ===== LOGO (3D GOLD “S”) ===== */
 .logo-3d{
-  --size: clamp(160px, 20vw, 260px);
-  width:var(--size); height:var(--size); display:grid; place-items:center;
-  position:relative; transform-style:preserve-3d; z-index:11;
-  filter: drop-shadow(0 28px 48px rgba(0,0,0,.45));
-  will-change: transform, filter;
+  --size:clamp(160px,20vw,260px);
+  width:var(--size);height:var(--size);
+  display:grid;place-items:center;position:relative;
+  transform-style:preserve-3d;
+  filter:drop-shadow(0 28px 48px rgba(0,0,0,.45));
+  animation:s-roll 9s ease-in-out infinite;
 }
-
-/* Gold base: gradient + subtle bevel via multiple backgrounds */
+@keyframes s-roll{
+  0%{transform:rotateY(-8deg)rotateX(4deg);}
+  50%{transform:rotateY(8deg)rotateX(6deg);}
+  100%{transform:rotateY(-8deg)rotateX(4deg);}
+}
 .logo-3d .s{
   font-family:'Lobster',cursive;
-  font-size: calc(var(--size) * 0.9);
-  color: transparent;
-  -webkit-background-clip:text; background-clip:text;
-  background-image: linear-gradient(135deg, #fff9e6 0%, #ffd86b 18%, #ffb84d 45%, #ffd86b 80%, #fff9e6 100%);
-  text-shadow: 0 6px 26px rgba(0,0,0,.46);
+  font-size:calc(var(--size)*0.9);
+  color:transparent;
+  -webkit-background-clip:text;background-clip:text;
+  background-image:linear-gradient(135deg,#fff9e6 0%,#ffd86b 18%,#ffb84d 45%,#ffd86b 80%,#fff9e6 100%);
+  text-shadow:0 6px 26px rgba(0,0,0,.46);
   position:relative;
 }
-
-/* metallic sheen that scans across */
+/* metallic sheen */
 .logo-3d .s::after{
-  content:""; position:absolute; inset:0; z-index:6;
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.75) 40%, rgba(255,255,255,0.12) 60%, rgba(255,255,255,0) 100%);
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.75) 40%,rgba(255,255,255,0.12) 60%,rgba(255,255,255,0) 100%);
   mix-blend-mode:screen;
-  transform: translateX(-160%) skewX(-12deg);
-  animation: gold-sheen 2.6s linear infinite;
-  pointer-events:none;
+  transform:translateX(-160%)skewX(-12deg);
+  animation:gold-sheen 2.6s linear infinite;
 }
 @keyframes gold-sheen{
-  0%{ transform: translateX(-160%) skewX(-12deg); opacity:0; }
-  8%{ opacity:1; }
-  48%{ transform: translateX(160%) skewX(-12deg); opacity:1; }
-  100%{ transform: translateX(160%) skewX(-12deg); opacity:0; }
+  0%{transform:translateX(-160%)skewX(-12deg);opacity:0;}
+  8%{opacity:1;}
+  48%{transform:translateX(160%)skewX(-12deg);opacity:1;}
+  100%{transform:translateX(160%)skewX(-12deg);opacity:0;}
 }
-
-/* subtle 3D roll */
-@keyframes s-roll {
-  0%{ transform: rotateY(-8deg) rotateX(4deg); }
-  50%{ transform: rotateY(8deg) rotateX(6deg); }
-  100%{ transform: rotateY(-8deg) rotateX(4deg); }
-}
-.logo-3d{ animation: s-roll 9s ease-in-out infinite; }
-
-/* bright glowing flame aura (confined small area behind text) */
+/* glow aura */
 .logo-3d::before{
-  content:""; position:absolute; left:50%; top:48%;
-  transform:translate(-50%,-50%);
-  width:360px; height:360px; border-radius:50%;
-  background: radial-gradient(circle at 45% 40%, rgba(255,200,80,0.45) 0%, rgba(255,120,30,0.08) 18%, rgba(255,120,30,0.02) 28%, rgba(0,0,0,0) 60%);
-  filter: blur(36px) saturate(1.2); z-index:-2; pointer-events:none; mix-blend-mode:screen;
-  opacity:0.95;
-  animation: flame-pulse 10s linear infinite;
+  content:"";position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);
+  width:360px;height:360px;border-radius:50%;
+  background:radial-gradient(circle at 45% 40%,rgba(255,200,80,0.45)0%,rgba(255,120,30,0.08)18%,rgba(255,120,30,0.02)28%,rgba(0,0,0,0)60%);
+  filter:blur(36px) saturate(1.2);z-index:-2;animation:flame-pulse 10s linear infinite;
 }
 @keyframes flame-pulse{
-  0%{ filter: blur(32px) saturate(1.1); transform:translate(-50%,-50%) scale(1); background: radial-gradient(circle at 45% 40%, rgba(255,200,80,0.46) 0%, rgba(255,120,30,0.09) 18%, rgba(0,0,0,0) 60%); }
-  48%{ filter: blur(36px) saturate(1.3); transform:translate(-50%,-52%) scale(1.02); background: radial-gradient(circle at 50% 50%, rgba(80,200,255,0.38) 0%, rgba(30,150,255,0.06) 18%, rgba(0,0,0,0) 66%); }
-  100%{ filter: blur(32px) saturate(1.1); transform:translate(-50%,-50%) scale(1); }
+  0%{filter:blur(32px)saturate(1.1);}
+  48%{filter:blur(36px)saturate(1.3);}
+  100%{filter:blur(32px)saturate(1.1);}
 }
 
-/* spark flicker overlay for drama */
-.logo-3d::after{
-  content:""; position:absolute; left:50%; top:22%;
-  transform:translateX(-50%);
-  width:120px; height:120px; border-radius:50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 30%);
-  filter: blur(12px); opacity:0; z-index:12; pointer-events:none;
-  animation: spark-flick 6.6s linear infinite;
+/* ===== HERO SECTION ===== */
+.hero {
+  position: relative;
+  height:60vh;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;
+  overflow:hidden;
+  background-color:#0f0c29;
 }
-@keyframes spark-flick{
-  0%{ opacity:0; transform:translateX(-50%) scale(.9) }
-  6%{ opacity:0.88; transform:translateX(-50%) scale(1.08) }
-  12%{ opacity:0; transform:translateX(-50%) scale(.95) }
-  100%{ opacity:0; }
+.hero img.bg-slide {
+  position:absolute;width:100%;height:100%;
+  object-fit:cover;top:0;left:0;opacity:0;
+  transition:opacity 1s ease-in-out;
 }
-
-/* ===== HERO TEXT ===== */
-.welcome{
-  font-size:1.18rem; color:#fff; background: rgba(0,0,0,0.26); padding:.32rem .78rem; border-radius:8px;
-  font-weight:700; z-index:11; backdrop-filter: blur(4px);
+.hero img.bg-slide.active { opacity:1; }
+.hero .hero-content {
+  position: relative;z-index:2;
+  display: flex;flex-direction:column;
+  align-items:center;justify-content:center;
 }
-.hero-title{
-  font-family:'Lobster',cursive; font-size: clamp(3rem, 10vw, 6rem); color:#fff; line-height:1; margin-top:.35rem;
-  text-shadow: 0 14px 44px rgba(0,0,0,.56); z-index:11;
+.hero .welcome {
+  font-size: 1.5rem; margin-bottom: 0.5rem;
+  font-family: 'David Libre', serif;
+  background: rgba(255,255,255,0.3);
+  display: inline-block;padding: 0 0.5rem;
+  border-radius: 6px;
 }
-
-/* ===== SLANTED NEWS TICKER =====
-   Implement a slanted ribbon that scrolls text like a breaking news banner.
-*/
-.ticker-wrap{
-  position:relative; width:min(1100px,96%); margin-top:.6rem; z-index:11; height:56px;
-  display:flex; align-items:center; justify-content:center;
-  perspective: 800px;
+.hero h1 {
+  font-family: 'Lobster', cursive;
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+  background: rgba(255,255,255,0.3);
+  display: inline-block;padding: 0 0.5rem;
+  border-radius: 8px;
 }
-.ticker-ribbon{
-  position:relative; width:100%; overflow:hidden; transform: rotate(-6deg); /* slant */
-  transform-origin:center left;
+.hero .ticker {
+  display:block;width:100%;overflow:hidden;
+  white-space:nowrap;text-align:center;
+  font-family:'David Libre',serif;font-size:1.25rem;
+  animation:ticker 15s linear infinite;
+  color:#ffd700;font-weight:bold;
+  background:rgba(0,0,0,0.4);
+  padding:0.25rem;border-radius:6px;
 }
-.ticker-inner{
-  display:inline-block; padding-left:100%; white-space:nowrap;
-  animation: ribbon-scroll 22s linear infinite;
-  color:#fff; font-weight:800; font-size:1.02rem; letter-spacing:.4px;
-  background: linear-gradient(90deg, rgba(142,45,226,.95), rgba(255,0,128,.95));
-  padding: .7rem 1.6rem;
-  border-radius:10px;
-  box-shadow: 0 12px 34px rgba(0,0,0,.28);
-}
-.ticker-inner:hover{ animation-play-state:paused; }
-
-@keyframes ribbon-scroll{
-  0%{ transform: translateX(0%); }
-  100%{ transform: translateX(-100%); }
+@keyframes ticker {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
 }
 
-/* ===== CTA CARD ===== */
-.card-section{ padding:3rem 1rem; display:flex; justify-content:center; background:#fdf6e3 }
-.card{ background:#fff; color:#000; padding:2rem; border-radius:12px; max-width:920px; width:100%; box-shadow:0 14px 46px rgba(0,0,0,.08); text-align:center }
-.card h2{ color:#8e2de2; margin-bottom:.8rem; font-size:1.6rem }
-.card .get-start-btn{ background: linear-gradient(90deg,#8e2de2,#ff0080); color:#fff; padding:.7rem 1.6rem; border-radius:10px; border:none; font-weight:800; }
-
-/* ===== ABOUT (playcards) ===== */
-#about-section{ padding:3rem 1rem; background:#fdf6e3 }
-.about-container{ max-width:1200px; margin:0 auto; text-align:center; display:block; }
-
-/* intro */
-.about-intro{ max-width:940px; margin:0 auto 1.2rem; text-align:left; background:#fff; padding:1.4rem; border-radius:12px; box-shadow:0 12px 30px rgba(0,0,0,.06); }
-.about-intro h2{ color:#8e2de2; font-size:1.6rem; margin-bottom:.6rem; }
-.about-intro p{ color:#333; line-height:1.7; }
-
-/* playcard layout */
-.playcards{ display:grid; gap:1.15rem; margin-top:1.2rem; align-items:start; }
-@media(min-width: 980px){ .playcards{ grid-template-columns: repeat(3, 1fr); } }   /* 3 columns desktop */
-@media(min-width: 640px) and (max-width:979px){ .playcards{ grid-template-columns: repeat(2, 1fr); } } /* 2 columns tablet */
-@media(max-width:639px){ .playcards{ grid-template-columns: 1fr; } } /* 1 column mobile */
-
-/* Each card wrapper includes a headline above card */
-.playcard {
-  position:relative; background:transparent; padding-top:36px; /* space for icon overlap */
+/* ===== CARD SECTION ===== */
+.card-section {
+  padding:4rem 1rem;
+  display:flex;justify-content:center;
+  background:#fdf6e3;
 }
-.playcard-title {
-  text-align:center; font-weight:800; color:#222; margin-bottom:.5rem; font-size:1.05rem;
+.card {
+  background:#f7f7f7;color:#000;
+  padding:2rem;border-radius:12px;
+  max-width:800px;width:100%;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+  text-align:center;
 }
-/* the white card itself */
-.playcard-box {
-  background:#fff; border-radius:12px; padding:2rem 1rem 1.6rem; text-align:center;
-  box-shadow: 0 12px 30px rgba(0,0,0,.06); transition: transform .28s ease, box-shadow .28s ease;
-  min-height:160px; display:flex; align-items:center; justify-content:center; flex-direction:column;
-  position:relative; overflow:visible;
+.card h2 { margin-bottom:1rem; color:#8e2de2; font-size:2rem; }
+.card p { margin-bottom:2rem; font-size:1.1rem; line-height:1.6; }
+.card button {
+  padding:0.75rem 2rem;border:none;border-radius:8px;
+  background:linear-gradient(90deg, #ff0080, #8e2de2);
+  color:#fff;font-weight:bold;font-size:1.1rem;
+  cursor:pointer;transition:0.3s;
 }
-/* top-centered icon "sign" that sits on the card's top edge and partly overlaps */
-.playcard-badge {
-  position:absolute; top:-28px; left:50%; transform:translateX(-50%);
-  width:64px; height:64px; background:linear-gradient(180deg,#fff,#f6f6f8); border-radius:12px;
-  display:grid; place-items:center; font-size:1.8rem; box-shadow:0 8px 18px rgba(0,0,0,.12);
-  z-index:5;
+.card button:hover {
+  transform:scale(1.05);
+  box-shadow:0 0 15px #ff0080;
 }
-/* icon "content" in the middle of badge */
-.playcard-badge span{ display:block; font-size:28px }
-
-/* center content inside card */
-.playcard-content{ text-align:center; color:#444; line-height:1.6; padding-top:6px; }
-
-/* hover glow (purple→pink) similar to your live design */
-.playcard-box:hover{ transform: translateY(-8px); box-shadow:0 22px 50px rgba(142,45,226,.14); }
-.playcard-box:hover .playcard-badge{ box-shadow:0 22px 50px rgba(255,0,128,.12) }
 
 /* ===== TESTIMONIALS ===== */
-.testimonial-area{ max-width:1000px; margin:1.6rem auto; text-align:center; padding:0 1rem; }
-.testimonials{ background:#fff; border-radius:12px; padding:1rem; box-shadow:0 12px 40px rgba(0,0,0,.06); overflow:hidden; }
-.testimonial-track{ display:flex; transition: transform 480ms cubic-bezier(.2,.9,.2,1); width:100%; }
-.testimonial-slide{ min-width:100%; padding:1.6rem 1.2rem; box-sizing:border-box; text-align:center; }
-.testimonial-slide p{ font-size:1.05rem; color:#333; line-height:1.7; }
-.testimonial-slide strong{ display:block; color:#8e2de2; margin-top:.9rem; }
-.test-controls{ display:flex; justify-content:center; gap:12px; align-items:center; margin-top:.9rem; }
-.btn-small{ background: linear-gradient(90deg,#8e2de2,#ff0080); color:#fff; padding:.55rem .95rem; border-radius:10px; border:none; font-weight:700; cursor:pointer; }
-
-/* dots */
-.dots{ display:flex; justify-content:center; gap:8px; margin-top:.9rem }
-.dot{ width:9px; height:9px; border-radius:50%; background:#eee; cursor:pointer; transition:all 180ms }
-.dot.active{ background:#8e2de2; box-shadow:0 0 10px rgba(142,45,226,.35); transform:scale(1.06) }
+.testimonial-area{max-width:1000px;margin:2rem auto;text-align:center;padding:0 1rem;}
+.testimonials{background:#fff;border-radius:12px;padding:1rem;box-shadow:0 12px 40px rgba(0,0,0,.06);overflow:hidden;}
+.testimonial-track{display:flex;transition:transform 480ms cubic-bezier(.2,.9,.2,1);width:100%;}
+.testimonial-slide{min-width:100%;padding:1.6rem 1.2rem;box-sizing:border-box;text-align:center;}
+.testimonial-slide p{font-size:1.05rem;color:#333;line-height:1.7;}
+.testimonial-slide strong{display:block;color:#8e2de2;margin-top:.9rem;}
+.test-controls{display:flex;justify-content:center;gap:12px;align-items:center;margin-top:.9rem;}
+.btn-small{background:linear-gradient(90deg,#8e2de2,#ff0080);color:#fff;padding:.55rem .95rem;border-radius:10px;border:none;font-weight:700;cursor:pointer;}
+.dots{display:flex;justify-content:center;gap:8px;margin-top:.9rem;}
+.dot{width:9px;height:9px;border-radius:50%;background:#eee;cursor:pointer;transition:all 180ms;}
+.dot.active{background:#8e2de2;box-shadow:0 0 10px rgba(142,45,226,.35);transform:scale(1.06);}
 
 /* ===== FOOTER ===== */
-footer{ text-align:center; padding:1rem; background:#111; color:#fff; font-size:.95rem }
-
-/* small screen tweaks */
-@media(max-width:520px){
-  .logo-3d{ --size: 150px; }
-  .hero-title{ font-size: clamp(2rem, 10vw, 3.6rem); }
-  .ticker-inner{ padding:.6rem 1rem; font-size:.95rem; }
-}
+footer{text-align:center;padding:1rem;background:#111;color:#fff;font-size:.95rem;}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
+<!-- NAVBAR -->
 <nav>
   <div class="brand"><span class="mini">Sublime</span><span>Logs</span></div>
-
-  <div class="nav-links" role="navigation" aria-label="Main navigation">
+  <div class="nav-links">
     <a href="#">Home</a>
     <a href="#about-section">About</a>
-    <a href="#testimonial-area">Testimonials</a>
-    <a href="register.html" target="_blank">Register/Sign In</a>
-    <a href="login.html" target="_blank">Login</a>
-    <button class="get-start-btn" onclick="window.open('login.html','_blank')">Get Started</button>
+    <a href="#testimonial">Testimonials</a>
+    <a href="register.html">Register</a>
+    <a href="login.html">Login</a>
+    <button class="get-start-btn">Get Started</button>
   </div>
-
-  <!-- Hamburger -->
-  <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+  <button class="hamburger" id="hamburger">
     <span class="bar top"></span>
     <span class="bar mid"></span>
     <span class="bar bot"></span>
   </button>
-
-  <!-- Mobile panel -->
-  <div class="mobile-panel" id="mobilePanel" aria-hidden="true">
-    <button class="mobile-close" id="mobileClose" aria-label="Close menu">&times;</button>
-    <a href="#" onclick="closeMobile()">Home</a>
-    <a href="#about-section" onclick="closeMobile()">About</a>
-    <a href="#testimonial-area" onclick="closeMobile()">Testimonials</a>
-    <a href="register.html" target="_blank" onclick="closeMobile()">Register/Sign In</a>
-    <a href="login.html" target="_blank" onclick="closeMobile()">Login</a>
-    <div style="margin-top:1rem">
-      <button class="get-start-btn" style="width:100%" onclick="window.open('login.html','_blank')">Get Started</button>
-    </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <button class="mobile-close" id="mobileClose">&times;</button>
+    <a href="#">Home</a>
+    <a href="#about-section">About</a>
+    <a href="#testimonial">Testimonials</a>
+    <a href="register.html">Register</a>
+    <a href="login.html">Login</a>
+    <button class="get-start-btn">Get Started</button>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero" aria-label="Hero section">
-  <div class="bg-wrap" aria-hidden="true">
-    <img src="log1.jpeg" class="bg-slide active" alt="slide 1">
-    <img src="log2.jpeg" class="bg-slide" alt="slide 2">
-    <img src="log3.jpeg" class="bg-slide" alt="slide 3">
-    <img src="log4.jpeg" class="bg-slide" alt="slide 4">
-    <img src="log5.jpeg" class="bg-slide" alt="slide 5">
-    <img src="log6.jpeg" class="bg-slide" alt="slide 6">
+<!-- 3D LOGO -->
+<div style="display:flex;justify-content:center;margin:2rem 0;">
+  <div class="logo-3d">
+    <div class="s">S</div>
   </div>
+</div>
 
-  <div class="logo-holder" role="group" aria-label="Brand">
-    <div class="logo-3d" aria-hidden="false" role="img" aria-label="Sublime Logs logo">
-      <div class="s" data-s="S">S</div>
-    </div>
-
+<!-- HERO SECTION -->
+<section class="hero">
+  <img src="log1.jpeg" class="bg-slide active">
+  <img src="log2.jpeg" class="bg-slide">
+  <img src="log3.jpeg" class="bg-slide">
+  <img src="log4.jpeg" class="bg-slide">
+  <img src="log5.jpeg" class="bg-slide">
+  <img src="log6.jpeg" class="bg-slide">
+  <div class="hero-content">
     <div class="welcome">Welcome to …</div>
-    <h1 class="hero-title">Sublime Logs</h1>
-
-    <div class="ticker-wrap" aria-hidden="false">
-      <div class="ticker-ribbon">
-        <div class="ticker-inner">Connecting the world for better communication — Reliable SMS verification • Global gift sending • Secure & Private • Fast delivery</div>
-      </div>
-    </div>
+    <h1>Sublime Logs</h1>
+    <div class="ticker">Connecting the world for better communication</div>
   </div>
 </section>
 
-<!-- CTA -->
+<!-- CARD SECTION -->
 <section class="card-section">
   <div class="card">
     <h2>Reliable SMS Numbers & International Gift Sending</h2>
     <p>Buy high-quality, non-VoIP phone numbers for SMS verification worldwide. Sublime Logs ensures compatibility with multiple services, providing a secure, hassle-free way to receive verification codes instantly. We also make it easy to send gift items internationally to anyone, anywhere.</p>
-    <button class="get-start-btn" onclick="window.open('login.html','_blank')">Get Started</button>
+    <button onclick="window.open('login.html','_blank')">Get Started</button>
   </div>
 </section>
 
-<!-- ABOUT -->
-<section id="about-section">
-  <div class="about-container">
-    <div class="about-intro">
-      <h2>About Sublime Logs</h2>
-      <p>
-        Sublime Logs is your trusted partner for SMS verification and international gift sending.
-        We provide high-quality, non-VoIP phone numbers for instant verification codes anywhere in the world.
+<!-- ABOUT SECTION -->
+<section id="about-section" style="padding:4rem 1rem; background:#fdf6e3;">
+  <div class="about-container" style="max-width:1200px; margin:0 auto; text-align:center;">
+    <h2 style="color:#8e2de2; font-size:2.5rem; margin-bottom:2rem;">Reliable SMS Provider</h2>
+    <div class="card" style="background:#fff; padding:2rem; border-radius:12px; margin-bottom:3rem; box-shadow:0 8px 20px rgba(0,0,0,0.15);">
+      <h3 style="font-size:1.8rem; margin-bottom:1rem;">About Sublime Logs</h3>
+      <p style="font-size:1.1rem; line-height:1.8; color:#333;">
+        Sublime Logs is your trusted partner for SMS verification and international gift sending. 
+        We provide high-quality, non-VoIP phone numbers for instant verification codes anywhere in the world. 
         With our platform, sending gifts internationally has never been easier, connecting people and businesses globally.
       </p>
-    </div>
-
-    <div class="playcards">
-      <!-- Playcard 1 -->
-      <div class="playcard">
-        <div class="playcard-title">Reliable Numbers</div>
-        <div class="playcard-box">
-          <div class="playcard-badge"><span>📱</span></div>
-          <div class="playcard-content">High quality, non-VoIP numbers for instant SMS verification.</div>
-        </div>
-      </div>
-
-      <!-- Playcard 2 -->
-      <div class="playcard">
-        <div class="playcard-title">Global Coverage</div>
-        <div class="playcard-box">
-          <div class="playcard-badge"><span>🌍</span></div>
-          <div class="playcard-content">Numbers available in multiple countries for worldwide use.</div>
-        </div>
-      </div>
-
-      <!-- Playcard 3 -->
-      <div class="playcard">
-        <div class="playcard-title">Secure & Private</div>
-        <div class="playcard-box">
-          <div class="playcard-badge"><span>🔒</span></div>
-          <div class="playcard-content">Your privacy is our priority with fully secure numbers.</div>
-        </div>
-      </div>
-
-      <!-- Playcard 4 -->
-      <div class="playcard">
-        <div class="playcard-title">Fast Delivery</div>
-        <div class="playcard-box">
-          <div class="playcard-badge"><span>⚡</span></div>
-          <div class="playcard-content">Receive SMS codes in real-time without delays.</div>
-        </div>
-      </div>
-
-      <!-- Playcard 5 -->
-      <div class="playcard">
-        <div class="playcard-title">Easy Integration</div>
-        <div class="playcard-box">
-          <div class="playcard-badge"><span>🔗</span></div>
-          <div class="playcard-content">Our numbers work seamlessly across all platforms.</div>
-        </div>
-      </div>
-
-      <!-- Playcard 6 -->
-      <div class="playcard">
-        <div class="playcard-title">Gift Sending</div>
-        <div class="playcard-box">
-          <div class="playcard-badge"><span>🎁</span></div>
-          <div class="playcard-content">Send gifts internationally with ease.</div>
-        </div>
-      </div>
-
-      <!-- Playcard 7 -->
-      <div class="playcard">
-        <div class="playcard-title">24/7 Support</div>
-        <div class="playcard-box">
-          <div class="playcard-badge"><span>🕒</span></div>
-          <div class="playcard-content">Our team is always available to assist you.</div>
-        </div>
-      </div>
-
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="testimonial-area" id="testimonial-area">
-  <h2 style="text-align:center; color:#8e2de2; margin-bottom:.8rem">What Our Users Say</h2>
-
-  <div class="testimonial-area-inner" style="max-width:960px;margin:0 auto;">
-    <div class="testimonials">
-      <div class="testimonial-track" id="testimonialTrack">
-        <div class="testimonial-slide">
-          <p>"Sublime Logs made SMS verification seamless and fast for our team. Truly professional!"</p>
-          <strong>- Fola Logs</strong>
-        </div>
-        <div class="testimonial-slide">
-          <p>"Reliable numbers and amazing customer support. I trust Sublime Logs for all my verification needs."</p>
-          <strong>- OMN TV</strong>
-        </div>
-        <div class="testimonial-slide">
-          <p>"Gift sending internationally has never been easier. Sublime Logs is simply the best!"</p>
-          <strong>- Kenny Konnect TV</strong>
-        </div>
-        <div class="testimonial-slide">
-          <p>"Fast, secure, and easy to use. Sublime Logs is my go-to for SMS verification."</p>
-          <strong>- Jane A., Tech Entrepreneur</strong>
-        </div>
-        <div class="testimonial-slide">
-          <p>"We integrated Sublime Logs into our onboarding flow and saw fewer verification failures — excellent service."</p>
-          <strong>- BrightPay</strong>
-        </div>
-        <div class="testimonial-slide">
-          <p>"International gift delivery was fast and tracked. Recipients loved the packaging and speed."</p>
-          <strong>- Global Gift Co.</strong>
-        </div>
-        <div class="testimonial-slide">
-          <p>"Great uptime and the numbers arrive reliably. Our QA team uses them every day for testing."</p>
-          <strong>- QA Labs</strong>
-        </div>
-        <div class="testimonial-slide">
-          <p>"Support was prompt and helped us troubleshoot a tricky verification flow within minutes."</p>
-          <strong>- E-commerce Team</strong>
-        </div>
-        <div class="testimonial-slide">
-          <p>"Excellent coverage across countries and the API was simple to integrate. Highly recommended."</p>
-          <strong>- DevOps Collective</strong>
-        </div>
+<section class="testimonial-area" id="testimonial">
+  <h2 style="color:#8e2de2;margin-bottom:.8rem;">What Our Users Say</h2>
+  <div class="testimonials">
+    <div class="testimonial-track" id="testimonialTrack">
+      <div class="testimonial-slide">
+        <p>"Sublime Logs made SMS verification seamless and fast for our team. Truly professional!"</p>
+        <strong>- Fola Logs</strong>
+      </div>
+      <div class="testimonial-slide">
+        <p>"Reliable numbers and amazing customer support. I trust Sublime Logs for all my verification needs."</p>
+        <strong>- OMN TV</strong>
+      </div>
+      <div class="testimonial-slide">
+        <p>"Gift sending internationally has never been easier. Sublime Logs is simply the best!"</p>
+        <strong>- Kenny Konnect TV</strong>
       </div>
     </div>
-
-    <div class="test-controls" role="group" aria-label="Testimonial controls">
-      <button class="btn-small" id="prevTest" aria-label="Previous testimonial">Prev</button>
-      <div class="dots" id="testimonialDots" aria-hidden="false"></div>
-      <button class="btn-small" id="nextTest" aria-label="Next testimonial">Next</button>
-    </div>
+  </div>
+  <div class="test-controls">
+    <button class="btn-small" id="prevTest">Prev</button>
+    <div class="dots" id="testimonialDots"></div>
+    <button class="btn-small" id="nextTest">Next</button>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
   <div>© <span id="year"></span> Sublime Logs. All Rights Reserved.</div>
-  <div style="margin-top:.35rem">Design by Sublime Tech Team</div>
+  <div style="margin-top:.35rem;">Design by Sublime Tech Team</div>
 </footer>
 
 <script>
-/* ===== Mobile menu (hamburger -> X) ===== */
-const hamburger = document.getElementById('hamburger');
-const mobilePanel = document.getElementById('mobilePanel');
-const mobileClose = document.getElementById('mobileClose');
-const topBar = hamburger.querySelector('.top');
-const midBar = hamburger.querySelector('.mid');
-const botBar = hamburger.querySelector('.bot');
+/* ===== NAVBAR SCRIPT ===== */
+const hamburger=document.getElementById('hamburger');
+const panel=document.getElementById('mobilePanel');
+const closeBtn=document.getElementById('mobileClose');
+const bars=hamburger.querySelectorAll('.bar');
+function openPanel(){
+ panel.classList.add('show');
+ bars[0].style.transform='translateY(8px) rotate(45deg)';
+ bars[1].style.opacity='0';
+ bars[2].style.transform='translateY(-8px) rotate(-45deg)';
+}
+function closePanel(){
+ panel.classList.remove('show');
+ bars[0].style.transform='';
+ bars[1].style.opacity='';
+ bars[2].style.transform='';
+}
+hamburger.onclick=()=>panel.classList.contains('show')?closePanel():openPanel();
+closeBtn.onclick=closePanel;
 
-function openMobile() {
-  mobilePanel.classList.add('show');
-  mobilePanel.setAttribute('aria-hidden','false');
-  hamburger.setAttribute('aria-expanded','true');
-  topBar.style.transform = 'translateY(8px) rotate(45deg)';
-  midBar.style.opacity = '0';
-  botBar.style.transform = 'translateY(-8px) rotate(-45deg)';
-}
-function closeMobile() {
-  mobilePanel.classList.remove('show');
-  mobilePanel.setAttribute('aria-hidden','true');
-  hamburger.setAttribute('aria-expanded','false');
-  topBar.style.transform = '';
-  midBar.style.opacity = '';
-  botBar.style.transform = '';
-}
-hamburger.addEventListener('click', () => {
-  if (mobilePanel.classList.contains('show')) closeMobile(); else openMobile();
+/* ===== HERO IMAGE SLIDER ===== */
+const slides=document.querySelectorAll('.bg-slide');
+let currentSlide=0;
+setInterval(()=>{
+  slides[currentSlide].classList.remove('active');
+  currentSlide=(currentSlide+1)%slides.length;
+  slides[currentSlide].classList.add('active');
+},4000);
+
+/* ===== TESTIMONIAL SLIDER ===== */
+const track=document.getElementById('testimonialTrack');
+let slidesT=[...track.children];
+let index=0;
+const dotsContainer=document.getElementById('testimonialDots');
+slidesT.forEach((_,i)=>{
+ const dot=document.createElement('div');
+ dot.className=i===0?'dot active':'dot';
+ dot.onclick=()=>go(i);
+ dotsContainer.appendChild(dot);
 });
-if (mobileClose) mobileClose.addEventListener('click', closeMobile);
-document.querySelectorAll('.mobile-panel a').forEach(a => a.addEventListener('click', closeMobile));
-window.addEventListener('resize', () => { if (window.innerWidth > 840) closeMobile(); });
-
-/* ===== Preload hero images to avoid lag ===== */
-['log1.jpeg','log2.jpeg','log3.jpeg','log4.jpeg','log5.jpeg','log6.jpeg'].forEach(src => { const i=new Image(); i.src=src; });
-
-/* ===== Hero rotation (smooth) ===== */
-const bgSlides = Array.from(document.querySelectorAll('.bg-slide'));
-let activeIndex = 0;
-const heroInterval = 4500;
-let heroTimer = null;
-
-function showHeroIndex(i){
-  if(!bgSlides.length) return;
-  bgSlides.forEach((el, idx) => {
-    if(idx === i){ el.classList.add('active'); el.style.zIndex = 1; } else { el.classList.remove('active'); el.style.zIndex = 0; }
-  });
-  activeIndex = i;
+function go(i){
+ if(i<0)i=slidesT.length-1;
+ if(i>=slidesT.length)i=0;
+ index=i;
+ track.style.transform=`translateX(-${i*100}%)`;
+ updateDots();
 }
-
-function startHeroRotation(){
-  clearInterval(heroTimer);
-  heroTimer = setInterval(() => {
-    const next = (activeIndex + 1) % bgSlides.length;
-    showHeroIndex(next);
-  }, heroInterval);
+function updateDots(){
+ const dots=[...dotsContainer.children];
+ dots.forEach((d,i)=>d.classList.toggle('active',i===index));
 }
-window.addEventListener('load', () => { showHeroIndex(0); setTimeout(startHeroRotation, 200); });
+document.getElementById('prevTest').onclick=()=>go(index-1);
+document.getElementById('nextTest').onclick=()=>go(index+1);
 
-/* ===== Testimonial manual controls + dots ===== */
-const track = document.getElementById('testimonialTrack');
-let slidesLive = Array.from(track.children);
-let testIndex = 0;
+/* Auto rotate testimonials every 5s */
+setInterval(()=>go(index+1),5000);
 
-// render dots
-const dotsContainer = document.getElementById('testimonialDots');
-function renderDots(){
-  dotsContainer.innerHTML = '';
-  slidesLive.forEach((_, i) => {
-    const d = document.createElement('div');
-    d.className = i === 0 ? 'dot active' : 'dot';
-    d.setAttribute('role','button');
-    d.setAttribute('tabindex','0');
-    d.addEventListener('click', () => goToTest(i));
-    d.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') goToTest(i); });
-    dotsContainer.appendChild(d);
-  });
-}
-renderDots();
-function updateDots(){ const dots = Array.from(dotsContainer.children); dots.forEach((d, idx) => d.classList.toggle('active', idx === testIndex)); }
-
-function goToTest(n){
-  if(n < 0) n = slidesLive.length - 1;
-  if(n >= slidesLive.length) n = 0;
-  testIndex = n;
-  track.style.transform = `translateX(-${testIndex * 100}%)`;
-  updateDots();
-}
-document.getElementById('prevTest').addEventListener('click', () => goToTest(testIndex - 1));
-document.getElementById('nextTest').addEventListener('click', () => goToTest(testIndex + 1));
-goToTest(0);
-
-/* ===== Ticker pause on hover (handled via CSS animation-play-state when hovered) ===== */
-
-/* ===== Year in footer ===== */
-document.getElementById('year').textContent = new Date().getFullYear();
+/* Current year for footer */
+document.getElementById('year').textContent=new Date().getFullYear();
 </script>
+
 </body>
-                                                                                        </html>
+</html>

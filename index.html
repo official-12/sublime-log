@@ -3,410 +3,460 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Sublime Logs — Cinematic Home</title>
+<title>Sublime Logs — Home</title>
 
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Lobster&family=David+Libre:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* -----------------------
-   RESET & BASE
-   ----------------------- */
-* { box-sizing: border-box; margin:0; padding:0; }
-html,body { height:100%; }
-body {
-  font-family: 'David Libre', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: #fdf6e3;
-  color: #111;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-}
-a { color:inherit; text-decoration:none; }
-
-/* -----------------------
-   NAVBAR
-   ----------------------- */
-nav {
-  position: sticky; top:0; z-index:2000;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0.9rem 2rem;
-  background: linear-gradient(90deg,#8e2de2 0%,#ff0080 100%);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-}
-.brand { display:flex; align-items:center; gap:10px; color:#fff; font-weight:700; }
-.brand .mini { font-family:'Lobster',cursive; font-size:1.45rem; color:#fff; }
-nav ul { list-style:none; display:flex; gap:2.25rem; align-items:center; margin-left:auto; margin-right:auto; }
-nav ul li a { color:#fff; font-weight:700; padding:0.25rem; transition: color 200ms, text-shadow 200ms; }
-nav ul li a:hover { color:#ffd700; text-shadow:0 0 10px rgba(255,215,0,0.9); }
-
-/* Hamburger */
-.hamburger { display:none; width:36px; height:28px; align-items:center; justify-content:center; flex-direction:column; gap:5px; cursor:pointer; }
-.hamburger div { width:26px; height:3px; background:#fff; border-radius:2px; transition: transform 220ms, opacity 220ms; }
-
-@media(max-width:840px){
-  nav { padding:0.6rem 1rem; }
-  nav ul {
-    position:fixed; top:0; right:-100%;
-    height:100%; width:72%; max-width:360px;
-    background:#2c003e; padding:2.6rem 1.5rem; flex-direction:column; gap:1.25rem;
-    transition:right 280ms cubic-bezier(.2,.9,.3,1); box-shadow:-8px 0 30px rgba(0,0,0,0.45);
+  /* ---------------- Reset & Base ---------------- */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family: 'David Libre', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    background:#fdf6e3; color:#111;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    -webkit-font-feature-settings: "kern" 1;
   }
-  nav ul.show { right:0; }
-  .hamburger { display:flex; }
-  nav ul li a { color:#fff; font-size:1.05rem; }
-}
+  a{color:inherit;text-decoration:none}
 
-/* -----------------------
-   HERO
-   ----------------------- */
-.hero {
-  position: relative;
-  height: 72vh;
-  min-height:480px;
-  display:flex; align-items:center; justify-content:center;
-  text-align:center; overflow:hidden;
-  background: linear-gradient(180deg,#0f0c29 0%, #1e1037 60%);
-  color:#fff;
-  isolation:isolate;
-}
+  /* ---------------- NAV ---------------- */
+  nav{
+    position:sticky; top:0; z-index:3000;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.9rem 1.5rem; gap:1rem;
+    background: linear-gradient(90deg,#8e2de2 0%,#ff0080 100%);
+    box-shadow:0 6px 18px rgba(0,0,0,.25);
+  }
+  .brand { display:flex; align-items:center; gap:.6rem; color:#fff; font-weight:700; }
+  .brand .mini { font-family:'Lobster',cursive; font-size:1.35rem; }
+  .nav-links { display:flex; gap:2.2rem; align-items:center; margin-inline:auto; }
+  .nav-links a { color:#fff; font-weight:700; padding:.25rem; transition: all 160ms; }
+  .nav-links a:hover { color:#ffd700; text-shadow:0 0 8px rgba(255,215,0,.9); }
 
-/* Background slides */
-.hero .bg-wrap { position:absolute; inset:0; z-index:1; overflow:hidden; }
-.bg-slide {
-  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-  opacity:0; transition: opacity 1.1s ease-in-out;
-  transform: scale(1.03);
-  filter: brightness(0.46) contrast(1.05) saturate(1.05);
-}
-.bg-slide.active { opacity:1; transform: scale(1); }
+  /* Hamburger & X */
+  .hamburger{
+    display:none; width:44px; height:36px; align-items:center; justify-content:center; cursor:pointer;
+    background:transparent; border:none;
+  }
+  .hamburger .bar{ width:26px; height:3px; background:#fff; border-radius:3px; transition:transform 240ms,opacity 240ms; }
+  .hamburger .bar.mid{ width:18px; transition: width 240ms; margin:6px 0; }
 
-/* gradient overlay */
-.hero::after {
-  content:"";
-  position:absolute; inset:0; z-index:3;
-  background: linear-gradient(180deg, rgba(0,0,0,0.35) 10%, rgba(0,0,0,0.42) 45%, rgba(0,0,0,0.55) 100%);
-  pointer-events:none;
-}
+  /* mobile nav panel */
+  .mobile-panel{
+    display:none;
+    position:fixed; top:0; right:-100%; width:78%; max-width:360px; height:100%;
+    background:#2c003e; padding:2.25rem 1.5rem; gap:1.2rem; flex-direction:column;
+    transition:right 260ms cubic-bezier(.2,.9,.3,1); box-shadow:-8px 0 28px rgba(0,0,0,.45);
+    z-index:3100;
+  }
+  .mobile-panel.show{ right:0; }
+  .mobile-panel a{ color:#fff; font-weight:700; font-size:1.05rem; display:block; padding:.5rem 0; }
 
-/* Logo container */
-.logo-holder {
-  position:relative; z-index:10;
-  display:flex; flex-direction:column; align-items:center; gap:0.85rem;
-  perspective:1200px;
-}
+  /* X icon visible inside panel */
+  .mobile-close{
+    position:absolute; top:14px; right:16px; color:#fff; font-size:28px; background:transparent; border:none; cursor:pointer;
+  }
 
-/* ===== HERO LOGO PULSE BACKGLOW ===== */
-.logo-holder::before {
-  content:"";
-  position:absolute;
-  inset:-60%;
-  border-radius:50%;
-  background: radial-gradient(circle, rgba(255,180,60,0.25), rgba(0,0,0,0));
-  animation: pulse 10s ease-in-out infinite;
-  filter: blur(55px);
-  z-index:0;
-  mix-blend-mode: screen;
-}
+  @media (max-width:840px){
+    .nav-links{ display:none }
+    .hamburger{ display:flex }
+    .mobile-panel{ display:flex }
+  }
 
-/* Smooth color-changing pulse synced with flame color */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.65;
-    transform: scale(1);
+  /* ---------------- HERO ---------------- */
+  .hero{
+    position:relative; height:72vh; min-height:420px; display:flex; align-items:center; justify-content:center;
+    text-align:center; overflow:hidden; background: linear-gradient(180deg,#0f0c29 0%, #1e1037 60%); color:#fff;
+    isolation:isolate; padding:0 1rem;
+  }
+
+  /* background slides (GPU accelerated) */
+  .bg-wrap{ position:absolute; inset:0; z-index:1; overflow:hidden; }
+  .bg-slide{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    opacity:0; transition:opacity 1100ms cubic-bezier(.25,.1,.25,1);
+    will-change:opacity, transform; transform:translateZ(0);
+    filter:brightness(.48) contrast(1.03) saturate(1.05);
+  }
+  .bg-slide.active{ opacity:1 }
+
+  /* dark overlay to preserve contrast */
+  .hero::after{
+    content:""; position:absolute; inset:0; z-index:3;
+    background: linear-gradient(180deg, rgba(0,0,0,.33) 8%, rgba(0,0,0,.45) 45%, rgba(0,0,0,.6) 100%);
+    pointer-events:none;
+  }
+
+  /* ---------- Logo + pulse ---------- */
+  .logo-holder{ position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; gap:.75rem; perspective:1200px; }
+
+  .logo-holder::before{
+    content:""; position:absolute; inset:-60%; border-radius:50%;
     background: radial-gradient(circle, rgba(255,180,60,0.25), rgba(0,0,0,0));
+    animation:pulse 10s ease-in-out infinite; filter:blur(55px); z-index:0; mix-blend-mode:screen;
   }
-  50% {
-    opacity: 1;
-    transform: scale(1.15);
-    background: radial-gradient(circle, rgba(60,180,255,0.25), rgba(0,0,0,0));
+
+  @keyframes pulse{
+    0%,100%{ opacity:.65; transform:scale(1); background:radial-gradient(circle, rgba(255,180,60,0.25), rgba(0,0,0,0)); }
+    50%{ opacity:1; transform:scale(1.15); background:radial-gradient(circle, rgba(60,180,255,0.25), rgba(0,0,0,0)); }
   }
-}
 
-/* -------- 3D S Logo -------- */
-.logo-3d {
-  --size: 210px;
-  width:var(--size); height:var(--size);
-  display:grid; place-items:center; position:relative;
-  transform-style:preserve-3d;
-  margin-bottom:0.2rem;
-  filter: drop-shadow(0 18px 40px rgba(0,0,0,0.45));
-  animation: logo-roll 8s linear infinite, aura-tint 10s linear infinite;
-}
+  .logo-3d{ --size:clamp(140px, 19vw, 220px); width:var(--size); height:var(--size); display:grid; place-items:center; position:relative; transform-style:preserve-3d; filter:drop-shadow(0 18px 40px rgba(0,0,0,.45)); animation:logo-roll 8s linear infinite, aura-tint 10s linear infinite; }
+  .logo-3d .aura{ position:absolute; inset:-30%; z-index:-3; border-radius:22%; mix-blend-mode:screen; filter:blur(28px) saturate(1.2); animation:aura-color 10s linear infinite; }
+  .logo-3d .flame{ position:absolute; inset:-46%; z-index:-4; border-radius:40%; filter:blur(36px) contrast(1.05) saturate(1.25); animation:flame-wave 4.2s ease-in-out infinite, flame-color-shift 10s linear infinite; mix-blend-mode:screen }
+  .logo-3d .s{ font-family:'Lobster',cursive; font-size:calc(var(--size) * .86); color:transparent; background: linear-gradient(120deg,#ffd86b 0%,#ffb84d 30%,#fff6d6 58%,#ffd86b 100%); -webkit-background-clip:text; background-clip:text; position:relative; z-index:6; text-shadow:0 2px 0 rgba(0,0,0,.18), 0 18px 40px rgba(0,0,0,.55); display:inline-block }
+  .logo-3d .s::after{ content:""; position:absolute; inset:0; z-index:8; background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 45%, rgba(255,255,255,.12) 55%, rgba(255,255,255,0) 100%); mix-blend-mode:screen; transform:translateX(-140%) skewX(-14deg); animation:sheen 2.6s linear infinite }
+  .logo-3d .edge-glow{ position:absolute; inset:0; border-radius:14%; box-shadow: inset 0 18px 36px rgba(255,255,255,.06), inset 0 -16px 28px rgba(0,0,0,.10); mix-blend-mode:overlay }
 
-/* aura & flame */
-.logo-3d .aura {
-  position:absolute; inset:-30%; z-index:-3; border-radius:22%;
-  pointer-events:none;
-  background: radial-gradient(circle at 50% 45%, rgba(255,200,80,0.28) 0%, rgba(255,120,35,0.08) 18%, rgba(255,120,35,0.02) 28%, rgba(0,0,0,0) 60%);
-  filter: blur(28px) saturate(1.2);
-  opacity:1;
-  mix-blend-mode: screen;
-  animation: aura-color 10s linear infinite;
-}
-.logo-3d .flame {
-  position:absolute; inset:-46%; z-index:-4; pointer-events:none; border-radius:40%;
-  background:
-    radial-gradient(40% 30% at 35% 40%, rgba(255,200,90,0.28) 0%, rgba(255,120,30,0.06) 12%, rgba(0,0,0,0) 36%),
-    radial-gradient(50% 40% at 70% 60%, rgba(255,140,60,0.14) 0%, rgba(255,100,30,0.02) 14%, rgba(0,0,0,0) 42%);
-  filter: blur(36px) contrast(1.05) saturate(1.25);
-  animation: flame-wave 4.2s ease-in-out infinite, flame-color-shift 10s linear infinite;
-  opacity:0.95;
-  mix-blend-mode: screen;
-}
+  @keyframes logo-roll{ 0%{transform:rotateY(-8deg) rotateX(6deg) rotateZ(-1deg)}50%{transform:rotateY(6deg) rotateX(8deg) rotateZ(1deg)}100%{transform:rotateY(-8deg) rotateX(6deg) rotateZ(-1deg)} }
+  @keyframes sheen{ 0%{transform:translateX(-140%) skewX(-14deg);opacity:0} 8%,48%{opacity:.9} 100%{transform:translateX(140%) skewX(-14deg);opacity:0} }
+  @keyframes flame-wave{ 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-6px) scale(1.02)} }
+  @keyframes aura-color{ 0%,100%{background:radial-gradient(circle at 50% 45%, rgba(255,200,80,.32) 0%, rgba(255,120,35,.08) 18%, rgba(0,0,0,0) 60%)} 50%{background:radial-gradient(circle at 50%45%, rgba(80,200,255,.22) 0%, rgba(30,150,255,.06) 18%, rgba(0,0,0,0) 66%); filter:blur(30px) saturate(1.3)} }
+  @keyframes aura-tint{ 0%,100%{filter:drop-shadow(0 18px 40px rgba(255,150,45,.55))} 45%{filter:drop-shadow(0 22px 48px rgba(30,160,255,.55))} }
+  @keyframes flame-color-shift{ 0%,100%{background: radial-gradient(40% 30% at 35% 40%, rgba(255,200,90,.28) 0%, rgba(255,120,30,.06) 12%), radial-gradient(50% 40% at 70% 60%, rgba(255,140,60,.14) 0%, rgba(255,100,30,.02) 14%)} 50%{background: radial-gradient(40% 30% at 35% 40%, rgba(140,220,255,.22) 0%, rgba(60,160,255,.06) 12%), radial-gradient(50% 40% at 70% 60%, rgba(80,180,255,.08) 0%, rgba(40,120,255,.02) 14%)} }
 
-/* The "S" */
-.logo-3d .s {
-  font-family:'Lobster', cursive;
-  font-size: calc(var(--size) * 0.86);
-  color: transparent;
-  background: linear-gradient(120deg, #ffd86b 0%, #ffb84d 30%, #fff6d6 58%, #ffd86b 100%);
-  -webkit-background-clip: text; background-clip: text;
-  position:relative; z-index:6;
-  text-shadow: 0 2px 0 rgba(0,0,0,0.18), 0 18px 40px rgba(0,0,0,0.55);
-  display:inline-block;
-}
-.logo-3d .s::before {
-  content: attr(data-s);
-  position:absolute; left:0; top:0; z-index:1;
-  color: rgba(0,0,0,0.12);
-  transform: translate3d(10px, 12px, -28px) rotateX(12deg);
-  filter: blur(6px);
-}
-.logo-3d .s::after {
-  content:"";
-  position:absolute; inset:0; z-index:8;
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 45%, rgba(255,255,255,0.12) 55%, rgba(255,255,255,0) 100%);
-  mix-blend-mode: screen;
-  transform: translateX(-140%) skewX(-14deg);
-  animation: sheen 2.6s linear infinite;
-}
+  /* hero text */
+  .welcome{ font-family:'David Libre', serif; background:rgba(255,255,255,.06); padding:.22rem .6rem; border-radius:6px; z-index:11; }
+  h1.hero-title{ font-family:'Lobster',cursive; font-size:clamp(2rem,6vw,3.6rem); z-index:11; color:#fff; text-shadow:0 10px 30px rgba(0,0,0,.5) }
+  /* ticker */
+  .ticker { width:min(860px,92%); overflow:hidden; white-space:nowrap; z-index:11; border-radius:8px; background:rgba(0,0,0,.24); padding:.28rem .6rem; display:block; margin-top:.45rem; }
+  .ticker .ticker-track { display:inline-block; padding-left:100%; animation: ticker-scroll 12s linear infinite; color:#ffd86b; font-weight:700; font-size:1.03rem; }
+  @keyframes ticker-scroll { 0%{ transform:translateX(0) } 100%{ transform:translateX(-100%) } }
 
-/* depth & sparks */
-.logo-3d .edge-glow { position:absolute; inset:0; border-radius:14%; box-shadow: inset 0 18px 36px rgba(255,255,255,0.06), inset 0 -16px 28px rgba(0,0,0,0.10); mix-blend-mode: overlay; }
-.logo-3d .spark {
-  position:absolute; width:10%; height:10%; border-radius:50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.0) 50%);
-  top:6%; left:14%; transform: translateZ(20px);
-  opacity:0.0; animation: spark-flick 6.5s linear infinite;
-}
+  /* ---------------- CARD / ABOUT / BUTTON ---------------- */
+  .card-section{ padding:3.2rem 1rem; display:flex; justify-content:center; background:#fdf6e3 }
+  .card{ background:#fff; color:#000; padding:2rem; border-radius:12px; max-width:920px; width:100%; box-shadow:0 12px 30px rgba(0,0,0,.08); text-align:center }
+  .get-start-btn{
+    display:inline-block; padding:.75rem 1.8rem; border-radius:12px; border:none; margin-top:1rem;
+    background: linear-gradient(90deg,#ffb84d,#ff5f8b); color:#fff; font-weight:800; font-size:1.05rem;
+    box-shadow:0 8px 30px rgba(255,96,140,.18), inset 0 -4px 8px rgba(0,0,0,.08);
+    transition: transform 160ms ease, box-shadow 160ms;
+  }
+  .get-start-btn:hover{ transform:translateY(-4px); box-shadow:0 18px 48px rgba(255,96,140,.22) }
 
-/* Animations */
-@keyframes logo-roll {
-  0% { transform: rotateY(-8deg) rotateX(6deg) rotateZ(-1deg); }
-  50% { transform: rotateY(6deg) rotateX(8deg) rotateZ(1deg); }
-  100% { transform: rotateY(-8deg) rotateX(6deg) rotateZ(-1deg); }
-}
-@keyframes sheen {
-  0% { transform: translateX(-140%) skewX(-14deg); opacity:0; }
-  8%,48% { opacity:0.9; }
-  100% { transform: translateX(140%) skewX(-14deg); opacity:0; }
-}
-@keyframes spark-flick {
-  0%,12%,100% { opacity:0; }
-  6% { opacity:0.85; transform: scale(1.1) translateZ(30px); }
-}
-@keyframes flame-wave {
-  0%,100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-6px) scale(1.02); }
-}
-@keyframes aura-color {
-  0%,100% { background: radial-gradient(circle at 50% 45%, rgba(255,200,80,0.32) 0%, rgba(255,120,35,0.08) 18%, rgba(0,0,0,0) 60%); }
-  50% { background: radial-gradient(circle at 50% 45%, rgba(80,200,255,0.22) 0%, rgba(30,150,255,0.06) 18%, rgba(0,0,0,0) 66%); filter: blur(30px) saturate(1.3); }
-}
-@keyframes aura-tint {
-  0%,100% { filter: drop-shadow(0 18px 40px rgba(255,150,45,0.55)); }
-  45% { filter: drop-shadow(0 22px 48px rgba(30,160,255,0.55)); }
-}
-@keyframes flame-color-shift {
-  0%,100% { background: radial-gradient(40% 30% at 35% 40%, rgba(255,200,90,0.28) 0%, rgba(255,120,30,0.06) 12%), radial-gradient(50% 40% at 70% 60%, rgba(255,140,60,0.14) 0%, rgba(255,100,30,0.02) 14%); }
-  50% { background: radial-gradient(40% 30% at 35% 40%, rgba(140,220,255,0.22) 0%, rgba(60,160,255,0.06) 12%), radial-gradient(50% 40% at 70% 60%, rgba(80,180,255,0.08) 0%, rgba(40,120,255,0.02) 14%); }
-}
+  /* ---------------- ABOUT (card-like like your tailwind example) ---------------- */
+  #about-section{ padding:3rem 1rem; background:#fdf6e3 }
+  .about-container{ max-width:1100px; margin:0 auto; text-align:left; display:grid; gap:1rem }
+  .about-hero{ background:#fff; padding:1.6rem; border-radius:12px; box-shadow:0 12px 30px rgba(0,0,0,.06) }
+  .about-columns{ display:grid; grid-template-columns:1fr; gap:1rem; margin-top:1rem }
+  .about-columns .col{ background:#fff; padding:1.1rem; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,.05) }
 
-/* Hero Text */
-.hero .welcome { font-family: 'David Libre', serif; font-size:1.05rem; background: rgba(255,255,255,0.06); padding: 0.22rem 0.6rem; border-radius:6px; }
-.hero h1 { font-family:'Lobster', cursive; font-size: clamp(2.4rem, 6vw, 4rem); color:#fff; text-shadow:0 10px 30px rgba(0,0,0,0.5); }
-.hero .ticker { margin-top:0.45rem; font-size:1.05rem; font-weight:700; color:#ffd86b; background: rgba(0,0,0,0.25); padding:0.25rem 0.5rem; border-radius:6px; }
+  @media(min-width:880px){ .about-columns{ grid-template-columns: 1fr 1fr } }
 
-/* -----------------------
-   CARD + TESTIMONIALS
-   ----------------------- */
-.card-section { padding: 3.5rem 1rem; display:flex; justify-content:center; background:#fdf6e3; }
-.card { background:#f7f7f7; color:#000; padding:2rem; border-radius:12px; max-width:900px; width:100%; box-shadow:0 8px 20px rgba(0,0,0,0.12); text-align:center; }
+  /* ---------------- TESTIMONIALS ---------------- */
+  .testimonial-area{ max-width:920px; margin:1.4rem auto 2rem; text-align:center }
+  .testimonials{ position:relative; overflow:hidden; border-radius:12px; background:linear-gradient(180deg,#fff 0%, #fffdf6 100%); box-shadow:0 12px 40px rgba(0,0,0,.06) }
+  .testimonial-track{ display:flex; transition:transform 480ms cubic-bezier(.2,.9,.2,1); width:100%; }
+  .testimonial-slide{ min-width:100%; padding:2rem; box-sizing:border-box; text-align:center }
+  .testimonial-slide p{ font-size:1.05rem; line-height:1.7; color:#333; margin-bottom:.6rem }
+  .testimonial-slide strong{ display:block; color:#8e2de2 }
 
-section#about-section { padding:3.5rem 1rem; background:#fdf6e3; }
-.about-container { max-width:1200px; margin:0 auto; text-align:center; }
+  .test-controls{ display:flex; justify-content:center; gap:12px; align-items:center; margin-top:.9rem }
+  .btn-small{ background:#8e2de2; color:#fff; padding:.5rem .9rem; border-radius:10px; border:none; font-weight:700; cursor:pointer; box-shadow:0 8px 22px rgba(142,45,226,.14) }
+  .btn-small[aria-disabled="true"]{ opacity:.5; cursor:not-allowed }
 
-.testimonial-area { max-width:920px; margin:0 auto; }
-.testimonials { position:relative; overflow:hidden; border-radius:12px; background: linear-gradient(180deg,#fff 0%, #fffdf6 100%); box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
-.testimonial-track { display:flex; width:max-content; transition: transform 700ms ease; }
-.testimonial-slide { min-width:100%; padding:2rem; text-align:center; }
-.testimonial-slide p { font-size:1.05rem; line-height:1.7; color:#333; margin-bottom:0.8rem; }
-.testimonial-slide strong { display:block; color:#8e2de2; margin-top:0.6rem; }
+  .dots{ display:flex; justify-content:center; gap:8px; margin-top:.9rem }
+  .dot{ width:9px; height:9px; border-radius:50%; background:#eee; cursor:pointer; transition:all 180ms }
+  .dot.active{ background:#8e2de2; box-shadow:0 0 10px rgba(142,45,226,.35); transform:scale(1.06) }
 
-.dots { display:flex; justify-content:center; gap:8px; margin-top:1rem; }
-.dot { width:9px; height:9px; border-radius:50%; background:#eee; cursor:pointer; transition: all 220ms; }
-.dot.active { background:#8e2de2; box-shadow:0 0 10px rgba(142,45,226,0.35); transform:scale(1.05); }
-@media(min-width:900px) { .testimonial-slide { padding:3rem 4rem; } }
+  /* ---------------- FOOTER ---------------- */
+  footer{ background:#111; color:#fff; text-align:center; padding:1.15rem 1rem; font-size:.95rem }
+  footer a{ color:#ffd86b; text-decoration:none }
+
+  /* small screens adjustments */
+  @media(max-width:520px){
+    .nav-links{ gap:1rem }
+    .logo-3d{ --size:150px }
+    .ticker .ticker-track{ animation-duration:18s }
+  }
 </style>
 </head>
 <body>
+
+<!-- NAV -->
 <nav>
   <div class="brand"><span class="mini">Sublime</span><span>Logs</span></div>
-  <ul id="nav-links">
-    <li><a href="#">Home</a></li>
-    <li><a href="#about-section">About</a></li>
-    <li><a href="register.html" target="_blank">Register/Sign In</a></li>
-    <li><a href="login.html" target="_blank">Login</a></li>
-  </ul>
-  <div class="hamburger" id="hamburger"><div></div><div></div><div></div></div>
+
+  <div class="nav-links" role="navigation" aria-label="Main navigation">
+    <a href="#">Home</a>
+    <a href="#about-section">About</a>
+    <a href="register.html" target="_blank">Register/Sign In</a>
+    <a href="login.html" target="_blank">Login</a>
+    <button class="get-start-btn" onclick="window.open('login.html','_blank')">Get Started</button>
+  </div>
+
+  <!-- Hamburger (mobile) -->
+  <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+    <span class="bar top"></span>
+    <span class="bar mid"></span>
+    <span class="bar bot"></span>
+  </button>
+
+  <!-- Mobile panel (hidden by default) -->
+  <div class="mobile-panel" id="mobilePanel" aria-hidden="true">
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">&times;</button>
+    <a href="#" onclick="closeMobile()">Home</a>
+    <a href="#about-section" onclick="closeMobile()">About</a>
+    <a href="register.html" target="_blank" onclick="closeMobile()">Register/Sign In</a>
+    <a href="login.html" target="_blank" onclick="closeMobile()">Login</a>
+    <div style="margin-top:1rem">
+      <button class="get-start-btn" style="width:100%" onclick="window.open('login.html','_blank')">Get Started</button>
+    </div>
+  </div>
 </nav>
 
-<section class="hero">
-  <div class="bg-wrap">
-    <img src="log1.jpeg" class="bg-slide active">
-    <img src="log2.jpeg" class="bg-slide">
-    <img src="log3.jpeg" class="bg-slide">
-    <img src="log4.jpeg" class="bg-slide">
-    <img src="log5.jpeg" class="bg-slide">
-    <img src="log6.jpeg" class="bg-slide">
+<!-- HERO -->
+<section class="hero" aria-label="Hero section">
+  <!-- Background images (log1..log6) -->
+  <div class="bg-wrap" aria-hidden="true">
+    <img src="log1.jpeg" class="bg-slide active" alt="slide 1">
+    <img src="log2.jpeg" class="bg-slide" alt="slide 2">
+    <img src="log3.jpeg" class="bg-slide" alt="slide 3">
+    <img src="log4.jpeg" class="bg-slide" alt="slide 4">
+    <img src="log5.jpeg" class="bg-slide" alt="slide 5">
+    <img src="log6.jpeg" class="bg-slide" alt="slide 6">
   </div>
 
-  <div class="logo-holder">
-    <div class="logo-3d">
-      <div class="aura"></div><div class="flame"></div><div class="spark"></div>
-      <div class="s" data-s="S">S</div><div class="edge-glow"></div>
+  <!-- Center logo and text -->
+  <div class="logo-holder" role="group" aria-label="Brand">
+    <div class="logo-3d" aria-hidden="false" role="img" aria-label="Sublime Logs logo">
+      <div class="aura"></div>
+      <div class="flame"></div>
+      <div class="spark" aria-hidden="true"></div>
+      <div class="s" data-s="S">S</div>
+      <div class="edge-glow" aria-hidden="true"></div>
     </div>
+
     <div class="welcome">Welcome to …</div>
-    <h1>Sublime Logs</h1>
-    <div class="ticker">Connecting the world for better communication</div>
+    <h1 class="hero-title">Sublime Logs</h1>
+
+    <div class="ticker" aria-hidden="false">
+      <div class="ticker-track">Connecting the world for better communication — Reliable SMS verification • Global gift sending • Secure & Private • Fast delivery</div>
+    </div>
   </div>
 </section>
 
+<!-- INTRO / CTA -->
 <section class="card-section">
   <div class="card">
-    <h2>Reliable SMS Numbers & International Gift Sending</h2>
-    <p>
-      At <strong>Sublime Logs</strong>, we bridge communication across the world — offering dependable SMS numbers and seamless international gift delivery solutions.
-      Our mission is to connect people, families, and businesses globally through smooth, secure, and modern digital tools.
+    <h2 style="color:#8e2de2; font-size:1.6rem; margin-bottom:.6rem">Reliable SMS Numbers & International Gift Sending</h2>
+    <p style="margin-bottom:1rem; font-size:1.05rem; color:#333">
+      Buy high-quality, non-VoIP phone numbers for SMS verification worldwide. Sublime Logs ensures compatibility with multiple services, providing a secure, hassle-free way to receive verification codes instantly. We also make it easy to send gift items internationally to anyone, anywhere.
     </p>
+    <button class="get-start-btn" onclick="window.open('login.html','_blank')">Get Started</button>
   </div>
 </section>
 
-<!-- ABOUT SECTION -->
+<!-- ABOUT -->
 <section id="about-section">
   <div class="about-container">
-    <h2>About Sublime Logs</h2>
-    <p style="margin-top:1rem; font-size:1.1rem;">
-      We’re passionate about making global connections effortless 🌍. 
-      From messaging solutions to virtual number services and secure transactions, Sublime Logs is your trusted digital partner for connectivity and growth.
-    </p>
+    <div class="about-hero">
+      <h2 style="color:#8e2de2; font-size:1.5rem">About Sublime Logs</h2>
+      <p style="margin-top:.6rem; color:#333; line-height:1.7">
+        Sublime Logs is a communication-first company focused on secure, reliable messaging and international gift delivery. We provide enterprise-grade, non-VoIP numbers for SMS verification, easy integrations, and a customer-first approach to global deliveries.
+      </p>
+    </div>
+
+    <div class="about-columns" style="margin-top:1rem">
+      <div class="col">
+        <h3 style="color:#8e2de2; margin-bottom:.6rem">Our Services</h3>
+        <ul style="line-height:1.75; color:#333">
+          <li>• Non-VoIP phone numbers for SMS verification</li>
+          <li>• Global coverage across many countries</li>
+          <li>• International gift delivery with tracking</li>
+          <li>• Simple API & dashboard for developers</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3 style="color:#8e2de2; margin-bottom:.6rem">Why choose us</h3>
+        <ul style="line-height:1.75; color:#333">
+          <li>• Fast, real-time SMS delivery</li>
+          <li>• Strong privacy & secure handling</li>
+          <li>• 24/7 customer support</li>
+          <li>• Easy onboarding and integrations</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- TESTIMONIAL SECTION -->
-<section class="card-section">
-  <div class="testimonial-area">
-    <h2 style="text-align:center; margin-bottom:1rem;">What Our Users Say</h2>
-    <div class="testimonials">
-      <div class="testimonial-track" id="testimonial-track">
-        <div class="testimonial-slide">
-          <p>"Sublime Logs helped me connect with clients across continents instantly — truly reliable!"</p>
-          <strong>– Clara M., London 🇬🇧</strong>
-        </div>
-        <div class="testimonial-slide">
-          <p>"The gift delivery feature surprised my family overseas. It was smooth, fast, and beautifully done."</p>
-          <strong>– Samuel O., Lagos 🇳🇬</strong>
-        </div>
-        <div class="testimonial-slide">
-          <p>"I use Sublime Logs for my small business — their SMS service is secure and efficient!"</p>
-          <strong>– Elena R., Madrid 🇪🇸</strong>
-        </div>
-        <div class="testimonial-slide">
-          <p>"Such a modern interface! The team’s support is top-tier — highly recommend it."</p>
-          <strong>– Hiroshi T., Tokyo 🇯🇵</strong>
-        </div>
-        <div class="testimonial-slide">
-          <p>"I’ve tried multiple platforms, but none compare to the smooth service Sublime Logs provides."</p>
-          <strong>– Aisha K., Dubai 🇦🇪</strong>
-        </div>
+<!-- TESTIMONIALS -->
+<section class="testimonial-area" aria-label="Testimonials">
+  <h2 style="text-align:center; color:#8e2de2; margin-bottom:.8rem">What Our Users Say</h2>
+
+  <div class="testimonials" id="testimonials">
+    <div class="testimonial-track" id="testimonialTrack">
+      <div class="testimonial-slide">
+        <p>"Sublime Logs helped me connect with clients across continents instantly — truly reliable!"</p>
+        <strong>– Clara M., London</strong>
+      </div>
+      <div class="testimonial-slide">
+        <p>"The gift delivery feature surprised my family overseas. Smooth, fast, beautifully done."</p>
+        <strong>– Samuel O., Lagos</strong>
+      </div>
+      <div class="testimonial-slide">
+        <p>"I use Sublime Logs for my small business — their SMS service is secure and efficient!"</p>
+        <strong>– Elena R., Madrid</strong>
+      </div>
+      <div class="testimonial-slide">
+        <p>"Such a modern interface! The team’s support is top-tier — highly recommend it."</p>
+        <strong>– Hiroshi T., Tokyo</strong>
+      </div>
+      <div class="testimonial-slide">
+        <p>"Excellent coverage across countries and the API was simple to integrate. Highly recommended."</p>
+        <strong>– DevOps Collective</strong>
       </div>
     </div>
-    <div class="dots" id="dots"></div>
+  </div>
+
+  <div class="test-controls" role="group" aria-label="Testimonial controls">
+    <button class="btn-small" id="prevTest">Prev</button>
+    <div class="dots" id="testimonialDots" aria-hidden="false"></div>
+    <button class="btn-small" id="nextTest">Next</button>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer style="background:#1a1a1a; color:#fff; text-align:center; padding:1.5rem 0; font-size:0.95rem;">
-  <p>© <span id="year"></span> Sublime Logs. All Rights Reserved.</p>
-  <p style="margin-top:0.3rem;">Designed with ❤️ by the Sublime Team</p>
+<footer>
+  <div>© <span id="year"></span> Sublime Logs. All Rights Reserved.</div>
+  <div style="margin-top:.35rem">Design by Sublime Tech Team</div>
 </footer>
 
 <script>
-/* ---------------------------
-   NAVBAR TOGGLE
---------------------------- */
+/* ---------------- NAV MOBILE TOGGLE + X ---------------- */
 const hamburger = document.getElementById('hamburger');
-const navLinks = document.getElementById('nav-links');
-hamburger.onclick = () => navLinks.classList.toggle('show');
+const mobilePanel = document.getElementById('mobilePanel');
+const mobileClose = document.getElementById('mobileClose');
+const navExpandedAttr = 'aria-expanded';
 
-/* ---------------------------
-   HERO BACKGROUND ROTATION
---------------------------- */
-const slides = document.querySelectorAll('.bg-slide');
-let currentSlide = 0;
-setInterval(() => {
-  slides[currentSlide].classList.remove('active');
-  currentSlide = (currentSlide + 1) % slides.length;
-  slides[currentSlide].classList.add('active');
-}, 5000); // rotates every 5 seconds
+function openMobile(){
+  mobilePanel.classList.add('show'); mobilePanel.setAttribute('aria-hidden','false');
+  hamburger.setAttribute(navExpandedAttr,'true');
+  // animate bars -> X
+  hamburger.querySelector('.top').style.transform = 'translateY(9px) rotate(45deg)';
+  hamburger.querySelector('.mid').style.opacity = '0';
+  hamburger.querySelector('.bot').style.transform = 'translateY(-9px) rotate(-45deg)';
+}
+function closeMobile(){
+  mobilePanel.classList.remove('show'); mobilePanel.setAttribute('aria-hidden','true');
+  hamburger.setAttribute(navExpandedAttr,'false');
+  hamburger.querySelector('.top').style.transform = '';
+  hamburger.querySelector('.mid').style.opacity = '';
+  hamburger.querySelector('.bot').style.transform = '';
+}
 
-/* ---------------------------
-   TESTIMONIAL CAROUSEL
---------------------------- */
-const track = document.getElementById('testimonial-track');
-const slidesT = Array.from(track.children);
-const dotsContainer = document.getElementById('dots');
+hamburger.addEventListener('click', () => {
+  if(mobilePanel.classList.contains('show')) closeMobile(); else openMobile();
+});
+mobileClose.addEventListener('click', closeMobile);
 
-slidesT.forEach((_, i) => {
-  const dot = document.createElement('div');
-  dot.classList.add('dot');
-  if (i === 0) dot.classList.add('active');
-  dot.addEventListener('click', () => showSlide(i));
-  dotsContainer.appendChild(dot);
+/* close on resize to avoid stuck menu */
+window.addEventListener('resize', () => {
+  if(window.innerWidth > 840) closeMobile();
 });
 
-const dots = Array.from(dotsContainer.children);
-let index = 0;
+/* close when a nav link is clicked (mobile) */
+document.querySelectorAll('.mobile-panel a').forEach(a => a.addEventListener('click', closeMobile));
 
-function showSlide(n) {
-  index = n;
-  const offset = -n * 100;
-  track.style.transform = `translateX(${offset}%)`;
-  dots.forEach(d => d.classList.remove('active'));
-  dots[n].classList.add('active');
+/* ---------------- PRELOAD HERO IMAGES (reduces lag) ---------------- */
+const heroImgs = ['log1.jpeg','log2.jpeg','log3.jpeg','log4.jpeg','log5.jpeg','log6.jpeg'];
+heroImgs.forEach(p => { const i = new Image(); i.src = p; });
+
+/* ---------------- HERO SLIDE (smooth) ---------------- */
+const bgSlides = Array.from(document.querySelectorAll('.bg-slide'));
+let activeIndex = 0;
+const heroInterval = 4500; // 4.5s
+let heroTimer = null;
+
+function showHeroIndex(i){
+  if(!bgSlides.length) return;
+  bgSlides.forEach((el, idx) => {
+    if(idx === i){ el.classList.add('active'); el.style.zIndex = 1; } 
+    else { el.classList.remove('active'); el.style.zIndex = 0; }
+  });
+  activeIndex = i;
 }
 
-function nextSlide() {
-  index = (index + 1) % slidesT.length;
-  showSlide(index);
+/* use interval with requestAnimationFrame for smoother operations */
+function startHeroRotation(){
+  clearInterval(heroTimer);
+  heroTimer = setInterval(() => {
+    const next = (activeIndex + 1) % bgSlides.length;
+    // ensure next image is visible before fade: toggling class triggers CSS transition
+    showHeroIndex(next);
+  }, heroInterval);
 }
-setInterval(nextSlide, 5500); // auto-scroll every 5.5s
 
-/* ---------------------------
-   RANDOMIZE TESTIMONIALS
---------------------------- */
-(function randomizeTestimonials() {
-  for (let i = slidesT.length - 1; i > 0; i--) {
+/* start after small delay to give preload some time */
+window.addEventListener('load', () => {
+  // ensure first visible
+  showHeroIndex(0);
+  setTimeout(startHeroRotation, 350);
+});
+
+/* ---------------- TICKER: pause on hover for usability ---------------- */
+const ticker = document.querySelector('.ticker .ticker-track');
+if(ticker){
+  const t = document.querySelector('.ticker');
+  t.addEventListener('mouseenter', () => ticker.style.animationPlayState = 'paused');
+  t.addEventListener('mouseleave', () => ticker.style.animationPlayState = 'running');
+}
+
+/* ---------------- TESTIMONIALS: manual navigation, dots, randomized on load ---------------- */
+const track = document.getElementById('testimonialTrack');
+const slides = Array.from(track.children);
+let testIndex = 0;
+
+// optional: randomize order on load (comment out if you want fixed order)
+(function shuffleSlides(){
+  for(let i = slides.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
-    track.appendChild(slidesT[j]);
+    track.appendChild(slides[j]);
   }
+  // recalc slides array after DOM changes
+  // (we'll use live children instead of cached slides)
 })();
 
-/* ---------------------------
-   FOOTER YEAR
---------------------------- */
-document.getElementById('year').textContent = new Date().getFullYear();
-</script>
+const slidesLive = Array.from(track.children);
+const dotsContainer = document.getElementById('testimonialDots');
 
+function renderDots(){
+  dotsContainer.innerHTML = '';
+  slidesLive.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('role','button');
+    d.setAttribute('tabindex','0');
+    d.addEventListener('click', () => goToTest(i));
+    d.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') goToTest(i); });
+    dotsContainer.appendChild(d);
+  });
+}
+renderDots();
+
+function updateDots(){
+  const dots = Array.from(dotsContainer.children);
+  dots.forEach((d, idx) => d.classList.toggle('active', idx === testIndex));
+}
+
+function goToTest(n){
+  if(n < 0) n = slidesLive.length - 1;
+  if(n >= slidesLive.length) n = 0;
+  testIndex = n;
+  track.style.transform = `translateX(-${testIndex * 100}%)`;
+  updateDots();
+}
+
+document.getElementById('prevTest').addEventListener('click', () => goToTest(testIndex - 1));
+document.getElementById('nextTest').addEventListener('click', () => goToTest(testIndex + 1));
+
+// initial ensure
+goToTest(0);
+
+/* ---------------- FOOTER YEAR ---------------- */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+</script>
 </body>
-</html>
+   </html>

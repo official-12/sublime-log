@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sublime Logs — Redesigned</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Lobster&family=David+Libre:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  /* Reset */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html,body { height: 100%; }
+
+  /* Body */
+  body {
+    font-family: 'David Libre', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: #fdf6e3;
+    color:#111;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* NAVBAR */
+  nav {
+    position: sticky;
+    top:0;
+    z-index:1000;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0.85rem 2rem;
+    background: linear-gradient(90deg,#8e2de2 0%, #ff0080 100%);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+
+  /* Brand text (left) - logo image removed */
+  .brand {
+    color: #fff;
+    font-weight:700;
+    font-size:1.25rem;
+    letter-spacing:0.6px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .brand .mini {
+    font-family:'Lobster',cursive;
+    font-size:1.4rem;
+    color: #fff;
+    opacity:0.95;
+  }
+
+  /* Nav menu - space items widely */
+  nav ul {
+    list-style:none;
+    display:flex;
+    gap:2.25rem; /* larger gap */
+    align-items:center;
+  }
+  nav ul li a {
+    color:#fff; text-decoration:none; font-weight:700;
+    padding:0.35rem 0.25rem;
+    transition: color 180ms ease, text-shadow 180ms ease;
+  }
+  nav ul li a:hover {
+    color:#ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.9);
+  }
+
+  /* hamburger */
+  .hamburger {
+    display:none;
+    width:36px;
+    height:28px;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    cursor:pointer;
+    gap:5px;
+  }
+  .hamburger div {
+    width:26px; height:3px; background:#fff; border-radius:2px; transition: transform 200ms ease, opacity 200ms ease;
+  }
+
+  @media (max-width: 840px) {
+    nav { padding:0.65rem 1rem; }
+    nav ul { 
+      position: fixed;
+      top:0; right: -100%;
+      height:100%;
+      width:70%;
+      max-width:320px;
+      background:#2c003e;
+      padding:2.5rem 1.5rem;
+      flex-direction:column;
+      gap:1.25rem;
+      transition: right 280ms cubic-bezier(.2,.9,.3,1);
+      box-shadow:-6px 0 30px rgba(0,0,0,0.4);
+    }
+    nav ul.show { right:0; }
+    nav ul li a { color:#fff; font-size:1.05rem; }
+    .hamburger { display:flex; }
+    .brand { font-size:1rem; }
+  }
+
+
+  /* HERO */
+  .hero {
+    position: relative;
+    height: 68vh;
+    min-height:420px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0f0c29 0%, #1e1037 60%);
+    color:#fff;
+  }
+
+  /* retained background slides (optional images) */
+  .hero img.bg-slide {
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; opacity:0; transition: opacity 1s ease-in-out;
+    filter: brightness(0.5) contrast(1.05);
+  }
+  .hero img.bg-slide.active { opacity:1; }
+
+  /* Cinematic glow around logo */
+  .logo-holder {
+    position: relative;
+    z-index: 6;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:1rem;
+    transform-style: preserve-3d;
+    perspective: 1200px;
+  }
+
+  /* 3D S symbol */
+  .logo-3d {
+    --size: 170px; /* base size */
+    width: var(--size);
+    height: var(--size);
+    display:grid;
+    place-items:center;
+    position:relative;
+    border-radius:24%;
+    transform-style: preserve-3d;
+    animation: logo-roll 8s linear infinite;
+    will-change: transform, filter;
+  }
+
+  /* Outer dramatic halo (soft radial glow) */
+  .logo-3d::before {
+    content: "";
+    position:absolute; inset: -28%;
+    background: radial-gradient(ellipse at center, rgba(255,215,120,0.35) 0%, rgba(255,160,60,0.12) 20%, rgba(0,0,0,0) 55%);
+    filter: blur(18px) saturate(1.1);
+    z-index:-2;
+    opacity:0.95;
+    transition: opacity 300ms ease;
+  }
+
+  /* Secondary glow layered */
+  .logo-3d::after {
+    content: "";
+    position:absolute; inset: -55%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,236,179,0.12), rgba(255,140,60,0.02));
+    filter: blur(60px);
+    z-index:-3;
+    pointer-events:none;
+  }
+
+  /* The S letter itself (text-based with gradient & bevel) */
+  .logo-3d .s {
+    font-family: 'Lobster', cursive;
+    font-weight:700;
+    font-size: calc(var(--size) * 0.85);
+    line-height: 0.85;
+    color: transparent;
+    background: linear-gradient(120deg, #ffd86b 0%, #ffb84d 30%, #ffeab2 55%, #fff7e6 70%, #ffd86b 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    text-shadow:
+      0 1px 0 rgba(0,0,0,0.18),
+      0 6px 18px rgba(0,0,0,0.45),
+      0 0 20px rgba(255,200,70,0.12);
+    transform-style: preserve-3d;
+    position:relative;
+    z-index:4;
+  }
+
+  /* extra bevel using pseudo element underneath to fake depth */
+  .logo-3d .s::before {
+    content: attr(data-s);
+    position: absolute;
+    left: 0; top:0;
+    color: rgba(0,0,0,0.12);
+    transform: translate3d(8px, 12px, -20px) rotateX(16deg) skewX(-3deg);
+    filter: blur(6px);
+    z-index:1;
+    pointer-events:none;
+  }
+
+  /* Shimmer strip that rolls across the S */
+  .logo-3d .s::after {
+    content: "";
+    position:absolute;
+    inset:0;
+    z-index:6;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.35) 45%, rgba(255,255,255,0.12) 55%, rgba(255,255,255,0) 100%);
+    mix-blend-mode: screen;
+    transform: translateX(-120%) skewX(-12deg);
+    animation: shimmer 2.6s linear infinite;
+    pointer-events:none;
+  }
+
+  /* subtle inner edge for metallic feel */
+  .logo-3d .s-inner-glow {
+    position:absolute; inset:0; border-radius:16%;
+    z-index:2;
+    pointer-events:none;
+    box-shadow: inset 0 18px 30px rgba(255,255,255,0.06), inset 0 -14px 28px rgba(0,0,0,0.08);
+    mix-blend-mode: overlay;
+  }
+
+  /* 3D rolling motion: small roll/tilt */
+  @keyframes logo-roll {
+    0%   { transform: rotateZ(-3deg) rotateX(6deg) translateZ(0); }
+    25%  { transform: rotateZ(2deg)  rotateX(4deg) translateZ(6px); }
+    50%  { transform: rotateZ(-2deg) rotateX(6deg) translateZ(0); }
+    75%  { transform: rotateZ(1deg)  rotateX(8deg) translateZ(6px); }
+    100% { transform: rotateZ(-3deg) rotateX(6deg) translateZ(0); }
+  }
+
+  /* shimmer sliding across S */
+  @keyframes shimmer {
+    0%   { transform: translateX(-140%) skewX(-12deg); opacity:0.0; }
+    8%   { opacity:0.9; }
+    48%  { transform: translateX(140%) skewX(-12deg); opacity:0.9; }
+    100% { transform: translateX(140%) skewX(-12deg); opacity:0; }
+  }
+
+  /* HERO text */
+  .hero .welcome {
+    font-family: 'David Libre', serif;
+    font-size:1.05rem;
+    background: rgba(255,255,255,0.06);
+    padding: 0.25rem 0.6rem;
+    border-radius:6px;
+    color:#fff;
+    z-index:7;
+    backdrop-filter: blur(4px);
+  }
+  .hero h1 {
+    margin-top: 0.4rem;
+    font-family:'Lobster', cursive;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    color: #fff;
+    z-index:7;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .hero .ticker {
+    margin-top:0.6rem;
+    font-size:1.05rem;
+    font-weight:700;
+    color:#ffd86b;
+    z-index:7;
+    background: rgba(0,0,0,0.25);
+    padding:0.25rem 0.5rem;
+    border-radius:6px;
+  }
+
+  /* CARD section (kept from your original) */
+  .card-section {
+    padding: 3.5rem 1rem;
+    display:flex; justify-content:center;
+    background:#fdf6e3;
+  }
+  .card {
+    background:#f7f7f7; color:#000;
+    padding:2rem; border-radius:12px; max-width:900px; width:100%;
+    box-shadow:0 8px 20px rgba(0,0,0,0.12); text-align:center;
+  }
+
+  /* ABOUT & SERVICES kept but trimmed */
+  section#about-section { padding:3.5rem 1rem; background:#fdf6e3; }
+  .about-container { max-width:1200px; margin:0 auto; text-align:center; }
+
+  /* Testimonials */
+  .testimonial-area { max-width:860px; margin:0 auto; }
+  .testimonials {
+    position:relative;
+    overflow:hidden;
+    border-radius:12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    background: linear-gradient(180deg, #ffffff 0%, #fffdf6 100%);
+  }
+
+  /* track wrapper */
+  .testimonial-track {
+    display:flex;
+    width: max-content;
+    gap:0;
+    transform: translateX(0);
+  }
+
+  .testimonial-slide {
+    min-width:100%;
+    padding:2rem;
+    box-sizing:border-box;
+    flex:0 0 100%;
+    text-align:center;
+  }
+  .testimonial-slide p { font-size:1.05rem; line-height:1.7; color:#333; margin-bottom:1rem; }
+  .testimonial-slide strong { display:block; color:#8e2de2; margin-top:0.6rem; }
+
+  /* small dots */
+  .dots {
+    display:flex; justify-content:center; gap:8px; margin-top:1rem;
+  }
+  .dot {
+    width:8px; height:8px; border-radius:50%; background:#ddd; cursor:pointer;
+  }
+  .dot.active { background:#8e2de2; box-shadow: 0 0 8px rgba(142,45,226,0.45); }
+
+  /* Testimonials responsive */
+  @media (min-width:900px) {
+    .testimonial-slide { padding:3rem 4rem; }
+  }
+
+  /* Utility */
+  .muted { color:#666; font-size:0.95rem; }
+
+  /* small adjustments for hero spacing */
+  .hero .subtitle { margin-top:0.4rem; color: #ffd86b; font-weight:700; z-index:7; }
+
+  /* Make sure clickable buttons use pointer cursor */
+  button, .hamburger { cursor:pointer; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="brand">
+    <span class="mini">Sublime</span>
+    <span style="opacity:0.9;">Logs</span>
+  </div>
+
+  <ul id="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#about-section">About</a></li>
+    <li><a href="register.html" target="_blank">Register/Sign In</a></li>
+    <li><a href="login.html" target="_blank">Login</a></li>
+  </ul>
+
+  <div class="hamburger" id="hamburger" aria-label="Open menu" title="Open menu">
+    <div></div><div></div><div></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" aria-label="Hero">
+  <!-- Optional background slides (replace src with your images if desired) -->
+  <img src="log1.jpeg" alt="" class="bg-slide active" aria-hidden="true">
+  <img src="log2.jpeg" alt="" class="bg-slide" aria-hidden="true">
+  <img src="log3.jpeg" alt="" class="bg-slide" aria-hidden="true">
+
+  <div class="logo-holder">
+    <!-- 3D S logo -->
+    <div class="logo-3d" role="img" aria-label="Sublime Logs logo">
+      <div class="s" data-s="S">S</div>
+      <div class="s-inner-glow" aria-hidden="true"></div>
+    </div>
+
+    <div class="welcome">Welcome to …</div>
+    <h1>Sublime Logs</h1>
+    <div class="ticker">Connecting the world for better communication</div>
+  </div>
+</section>
+
+<!-- CARD SECTION -->
+<section class="card-section">
+  <div class="card">
+    <h2>Reliable SMS Numbers & International Gift Sending</h2>
+    <p>Buy high-quality, non-VoIP phone numbers for SMS verification worldwide. Sublime Logs ensures compatibility with multiple services, providing a secure, hassle-free way to receive verification codes instantly. We also make it easy to send gift items internationally to anyone, anywhere.</p>
+    <button onclick="window.open('login.html','_blank')">Get Started</button>
+  </div>
+</section>
+
+<!-- ABOUT + SERVICES -->
+<section id="about-section">
+  <div class="about-container">
+    <h2 style="color:#8e2de2; font-size:2.2rem; margin-bottom:1rem;">Reliable SMS Provider</h2>
+    <div class="card" style="background:#fff; padding:1.8rem; margin-bottom:1.8rem;">
+      <h3 style="font-size:1.6rem; color:#222; margin-bottom:0.6rem;">About Sublime Logs</h3>
+      <p style="color:#333; line-height:1.7;">
+        Sublime Logs is your trusted partner for SMS verification and international gift sending. We provide high-quality, non-VoIP phone numbers for instant verification codes anywhere in the world. With our platform, sending gifts internationally has never been easier.
+      </p>
+    </div>
+
+    <h3 style="color:#8e2de2; font-size:1.6rem; margin-bottom:1rem;">Why Choose Sublime Logs?</h3>
+    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:1rem;">
+      <div style="background:#fff; padding:1.2rem; border-radius:10px; width:220px; box-shadow:0 6px 18px rgba(0,0,0,0.06); text-align:center;">
+        <div style="font-size:2rem;">📱</div><h4>Reliable Numbers</h4><p class="muted">Non-VoIP numbers for instant SMS verification.</p>
+      </div>
+      <div style="background:#fff; padding:1.2rem; border-radius:10px; width:220px; box-shadow:0 6px 18px rgba(0,0,0,0.06); text-align:center;">
+        <div style="font-size:2rem;">🌍</div><h4>Global Coverage</h4><p class="muted">Numbers available in multiple countries.</p>
+      </div>
+      <div style="background:#fff; padding:1.2rem; border-radius:10px; width:220px; box-shadow:0 6px 18px rgba(0,0,0,0.06); text-align:center;">
+        <div style="font-size:2rem;">🔒</div><h4>Secure & Private</h4><p class="muted">Privacy-first platform.</p>
+      </div>
+    </div>
+
+    <!-- Testimonials -->
+    <div style="margin-top:2rem;" class="testimonial-area">
+      <div class="card" style="padding:1rem;">
+        <h3 style="color:#8e2de2; margin-bottom:1rem;">What Our Clients Say</h3>
+        <div class="testimonials" id="testimonials">
+          <div class="testimonial-track" id="testimonialTrack">
+            <!-- slide 1 -->
+            <div class="testimonial-slide">
+              <p>"Sublime Logs made SMS verification seamless and fast for our team. Truly professional!"</p>
+              <strong>- Fola Logs</strong>
+            </div>
+            <!-- slide 2 -->
+            <div class="testimonial-slide">
+              <p>"Reliable numbers and amazing customer support. I trust Sublime Logs for all my verification needs."</p>
+              <strong>- OMN TV</strong>
+            </div>
+            <!-- slide 3 -->
+            <div class="testimonial-slide">
+              <p>"Gift sending internationally has never been easier. Sublime Logs is simply the best!"</p>
+              <strong>- Kenny Konnect TV</strong>
+            </div>
+            <!-- slide 4 -->
+            <div class="testimonial-slide">
+              <p>"Fast, secure, and easy to use. Sublime Logs is my go-to for SMS verification."</p>
+              <strong>- Jane A., Tech Entrepreneur</strong>
+            </div>
+            <!-- slide 5 -->
+            <div class="testimonial-slide">
+              <p>"We integrated Sublime Logs into our onboarding workflow and reduced friction drastically."</p>
+              <strong>- BrightPay</strong>
+            </div>
+            <!-- slide 6 -->
+            <div class="testimonial-slide">
+              <p>"The international delivery for gifts was fast and tracked — our clients loved it."</p>
+              <strong>- Global Gift Co.</strong>
+            </div>
+            <!-- slide 7 -->
+            <div class="testimonial-slide">
+              <p>"Great uptime and the numbers always arrive reliably. Our QA relies on them daily."</p>
+              <strong>- QA Labs</strong>
+            </div>
+            <!-- slide 8 -->
+            <div class="testimonial-slide">
+              <p>"Support was prompt and helped us troubleshoot a tricky verification issue in minutes."</p>
+              <strong>- E-commerce Team</strong>
+            </div>
+          </div> <!-- /track -->
+        </div> <!-- /testimonials -->
+
+        <div class="dots" id="dotsContainer" aria-hidden="true"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SCRIPTS -->
+<script>
+  /* NAV hamburger */
+  (function(){
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('show');
+      hamburger.classList.toggle('open');
+    });
+    // close on link click (mobile)
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      navLinks.classList.remove('show');
+      hamburger.classList.remove('open');
+    }));
+  })();
+
+  /* Hero background slider (keeps your earlier logic) */
+  (function(){
+    const slides = document.querySelectorAll('.bg-slide');
+    if(!slides || slides.length === 0) return;
+    let idx = 0;
+    setInterval(() => {
+      slides[idx].classList.remove('active');
+      idx = (idx + 1) % slides.length;
+      slides[idx].classList.add('active');
+    }, 4500);
+  })();
+
+
+  /* Testimonials - smooth sliding carousel with pause on each slide */
+  (function(){
+    const track = document.getElementById('testimonialTrack');
+    const testimonials = Array.from(track.children);
+    const count = testimonials.length;
+
+    // Clone first slide to allow smooth reset for infinite loop
+    const firstClone = testimonials[0].cloneNode(true);
+    track.appendChild(firstClone);
+
+    let currentIndex = 0;
+    let isAnimating = false;
+    const slideDuration = 700; // ms for transform transition
+    const pauseBetween = 3200; // ms pause on each slide
+
+    // set track transition style
+    track.style.transition = `transform ${slideDuration}ms ease`;
+
+    // Create dots
+    const dotsContainer = document.getElementById('dotsContainer');
+    for (let i = 0; i < count; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.dataset.index = i;
+      d.addEventListener('click', () => gotoSlide(parseInt(d.dataset.index)));
+      dotsContainer.appendChild(d);
+    }
+    const dots = Array.from(dotsContainer.children);
+
+    // move to slide by index
+    function moveToIndex(i) {
+      track.style.transition = `transform ${slideDuration}ms ease`;
+      track.style.transform = `translateX(-${i * 100}%)`;
+      dots.forEach((dot, idx) => dot.classList.toggle('active', idx === (i % count)));
+    }
+
+    // next slide logic with reset when hitting clone
+    function nextSlide() {
+      if (isAnimating) return;
+      isAnimating = true;
+      currentIndex++;
+      moveToIndex(currentIndex);
+
+      // after transition
+      setTimeout(() => {
+        // if we've reached clone (index === count), jump back to 0 without transition
+        if (currentIndex === count) {
+          track.style.transition = 'none';
+          currentIndex = 0;
+          track.style.transform = `translateX(-0%)`;
+        }
+        // small tick to reenable transitions
+        setTimeout(() => { track.style.transition = `transform ${slideDuration}ms ease`; isAnimating = false; }, 20);
+      }, slideDuration + 6);
+    }
+
+    // go to a specific slide (for dots)
+    function gotoSlide(i){
+      if (isAnimating) return;
+      isAnimating = true;
+      currentIndex = i;
+      moveToIndex(currentIndex);
+      setTimeout(()=> isAnimating = false, slideDuration + 6);
+    }
+
+    // autoplay with pause loop
+    let autoplay = setInterval(nextSlide, pauseBetween + slideDuration);
+
+    // Pause on hover
+    const container = document.getElementById('testimonials');
+    container.addEventListener('mouseenter', () => clearInterval(autoplay));
+    container.addEventListener('mouseleave', () => {
+      clearInterval(autoplay);
+      autoplay = setInterval(nextSlide, pauseBetween + slideDuration);
+    });
+
+    // Make accessible: pause on focus
+    container.addEventListener('focusin', () => clearInterval(autoplay));
+    container.addEventListener('focusout', () => {
+      clearInterval(autoplay);
+      autoplay = setInterval(nextSlide, pauseBetween + slideDuration);
+    });
+
+    // initial position
+    track.style.transform = `translateX(0%)`;
+  })();
+</script>
+</body>
+</html>

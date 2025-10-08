@@ -8,8 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Lobster&family=David+Libre:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* === RESET === */
-*{margin:0;padding:0;box-sizing:border-box}
+/* === RESET & BODY === */
+*{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'David Libre',serif;background:#fdf6e3;color:#000;}
 
 /* === MENU BAR === */
@@ -51,26 +51,14 @@ nav{
   .hamburger{display:flex;}
 }
 
-/* === HERO + FORM === */
-.hero-register{
-  min-height:90vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  text-align:center;
-  padding:2rem;
-  background:linear-gradient(to right,#fdf6e3,#fff);
-}
+/* === 3D LOGO === */
 .logo-3d{
-  position:relative;
-  --size:clamp(120px,18vw,180px);
-  width:var(--size);height:var(--size);
+  margin:2rem auto;position:relative;
+  --size:120px;width:var(--size);height:var(--size);
   display:grid;place-items:center;
   transform-style:preserve-3d;
   animation:s-roll 10s ease-in-out infinite;
-  filter:drop-shadow(0 18px 36px rgba(0,0,0,.35));
-  margin-bottom:1.5rem;
+  filter:drop-shadow(0 28px 48px rgba(0,0,0,.45));
 }
 @keyframes s-roll{
   0%{transform:rotateY(-8deg)rotateX(4deg);}
@@ -84,88 +72,47 @@ nav{
   background-clip:text;
   -webkit-background-clip:text;
   background-image:linear-gradient(135deg,#fff9e6 0%,#ffd86b 18%,#ffb84d 45%,#ffd86b 80%,#fff9e6 100%);
-  text-shadow:0 4px 16px rgba(0,0,0,.35);
+  text-shadow:0 6px 26px rgba(0,0,0,.46);
   position:relative;
-}
-.logo-3d .s::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.75) 40%,rgba(255,255,255,0.12) 60%,rgba(255,255,255,0) 100%);
-  mix-blend-mode:screen;
-  transform:translateX(-160%)skewX(-12deg);
-  animation:gold-sheen 3s linear infinite;
-}
-@keyframes gold-sheen{
-  0%{transform:translateX(-160%)skewX(-12deg);opacity:0;}
-  8%{opacity:1;}
-  48%{transform:translateX(160%)skewX(-12deg);opacity:1;}
-  100%{transform:translateX(160%)skewX(-12deg);opacity:0;}
 }
 
-.form-container{
-  background:#fff;
-  padding:2.5rem 2rem;
-  border-radius:12px;
-  box-shadow:0 12px 36px rgba(0,0,0,.12);
-  max-width:400px;
-  width:100%;
+/* === FORM CONTAINER === */
+.register-container{
+  max-width:420px;margin:2rem auto;padding:2rem;background:#fff;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15);
 }
-.form-container h2{
-  margin-bottom:1.5rem;
-  color:#8e2de2;
+.register-container h2{text-align:center;margin-bottom:1.5rem;color:#8e2de2;}
+.register-container label{display:block;margin:0.6rem 0 0.3rem;}
+.register-container input{
+  width:100%;padding:.6rem 0.9rem;border:1px solid #ccc;border-radius:8px;font-size:1rem;margin-bottom:.9rem;
 }
-.form-container input{
-  width:100%;
-  padding:.65rem 1rem;
-  margin-bottom:1rem;
-  border-radius:8px;
-  border:1px solid #ccc;
-  font-size:1rem;
+.password-field{position:relative;}
+.password-field span{
+  position:absolute;top:50%;right:10px;transform:translateY(-50%);
+  cursor:pointer;font-size:1.1rem;color:#333;
 }
-.password-field{
-  position:relative;
-}
-.password-field .toggle-eye{
-  position:absolute;
-  top:50%;right:12px;
-  transform:translateY(-50%);
-  cursor:pointer;
-  font-size:1.1rem;
-  color:#8e2de2;
-}
-.submit-btn{
-  width:100%;
-  padding:.7rem 1rem;
-  background:linear-gradient(90deg,#8e2de2,#ff0080);
-  border:none;
-  border-radius:9px;
-  color:#fff;
-  font-weight:700;
-  cursor:pointer;
+
+/* BUTTONS */
+.register-container button{
+  width:100%;padding:.65rem 0;background:linear-gradient(90deg,#8e2de2,#ff0080);
+  border:none;color:#fff;font-weight:700;border-radius:9px;font-size:1.1rem;cursor:pointer;
   margin-top:.5rem;
 }
-.form-footer{
-  margin-top:1rem;
-  font-size:.95rem;
-}
-.form-footer a{
-  color:#8e2de2;
-  font-weight:700;
-  text-decoration:underline;
-}
+.register-container .login-link{text-align:center;margin-top:.8rem;font-size:.95rem;}
+.register-container .login-link a{color:#8e2de2;font-weight:700;text-decoration:none;}
+.register-container .login-link a:hover{text-decoration:underline;}
 
-/* === FOOTER === */
+/* FOOTER */
 footer{text-align:center;padding:1rem;background:#111;color:#fff;font-size:.95rem;margin-top:2rem;}
 </style>
 </head>
-<body>
 
-<!-- NAVBAR (copy from homepage) -->
+<body>
+<!-- NAVBAR -->
 <nav>
   <div class="brand"><span class="mini">Sublime</span><span>Logs</span></div>
   <div class="nav-links">
     <a href="index.html">Home</a>
     <a href="index.html#about-section">About</a>
-    <a href="index.html#testimonial">Testimonials</a>
     <a href="register.html">Register</a>
     <a href="login.html">Login</a>
     <button class="get-start-btn">Get Started</button>
@@ -179,48 +126,53 @@ footer{text-align:center;padding:1rem;background:#111;color:#fff;font-size:.95re
     <button class="mobile-close" id="mobileClose">&times;</button>
     <a href="index.html">Home</a>
     <a href="index.html#about-section">About</a>
-    <a href="index.html#testimonial">Testimonials</a>
     <a href="register.html">Register</a>
     <a href="login.html">Login</a>
     <button class="get-start-btn">Get Started</button>
   </div>
 </nav>
 
-<!-- HERO + REGISTER FORM -->
-<section class="hero-register">
-  <div class="logo-3d"><div class="s">S</div></div>
-  <div class="form-container">
-    <h2>Create Your Account</h2>
-    <input type="text" id="fullName" placeholder="Full Name" required>
-    <input type="email" id="email" placeholder="Email" required>
-    <div class="password-field">
-      <input type="password" id="password" placeholder="Password" required>
-      <span class="toggle-eye" id="togglePassword">&#128065;</span>
-    </div>
-    <div class="password-field">
-      <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-      <span class="toggle-eye" id="toggleConfirm">&#128065;</span>
-    </div>
-    <button class="submit-btn" id="registerBtn">Sign Up</button>
-    <div class="form-footer">
-      Already have an account? <a href="login.html">Login</a>
-    </div>
+<!-- 3D LOGO -->
+<div class="logo-3d"><div class="s">S</div></div>
+
+<!-- REGISTER FORM -->
+<div class="register-container">
+  <h2>Create Account</h2>
+  <label for="name">Full Name</label>
+  <input type="text" id="name" placeholder="Enter your full name">
+
+  <label for="email">Email</label>
+  <input type="email" id="email" placeholder="Enter your email">
+
+  <label for="password">Password</label>
+  <div class="password-field">
+    <input type="password" id="password" placeholder="Enter password">
+    <span id="togglePassword">&#128065;</span>
   </div>
-</section>
+
+  <label for="confirmPassword">Confirm Password</label>
+  <div class="password-field">
+    <input type="password" id="confirmPassword" placeholder="Confirm password">
+    <span id="toggleConfirm">&#128065;</span>
+  </div>
+
+  <button id="registerBtn">Register</button>
+
+  <div class="login-link">Already have an account? <a href="login.html">Login</a></div>
+</div>
 
 <!-- FOOTER -->
 <footer>
-  <div>© <span id="year"></span> Sublime Logs. All Rights Reserved.</div>
-  <div style="margin-top:.35rem;">Design by Sublime Tech Team</div>
+  © <span id="year"></span> Sublime Logs. All Rights Reserved.
 </footer>
 
-<!-- Firebase SDK -->
+<!-- FIREBASE SDKs -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-firestore.js";
 
-// Your Firebase config
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDRnNoRJ4Zgtu-KEZAdOAKtou2LV9rdL5c",
   authDomain: "sublime-log.firebaseapp.com",
@@ -236,7 +188,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Show/hide password
+// Password toggle
 const togglePassword = document.getElementById('togglePassword');
 const passwordInput = document.getElementById('password');
 togglePassword.addEventListener('click', () => {
@@ -249,20 +201,23 @@ toggleConfirm.addEventListener('click', () => {
   confirmInput.type = confirmInput.type === 'password' ? 'text' : 'password';
 });
 
-// Register user
-const registerBtn = document.getElementById('registerBtn');
-registerBtn.addEventListener('click', async () => {
-  const fullName = document.getElementById('fullName').value.trim();
+// Register function
+document.getElementById('registerBtn').addEventListener('click', async () => {
+  const name = document.getElementById('name').value.trim();
   const email = document.getElementById('email').value.trim();
   const password = passwordInput.value;
-  const confirmPassword = confirmInput.value;
+  const confirm = confirmInput.value;
 
-  if (!fullName || !email || !password || !confirmPassword) {
+  if (!name || !email || !password || !confirm) {
     alert("Please fill in all fields.");
     return;
   }
-  if (password !== confirmPassword) {
-    alert("Passwords do not match!");
+  if (password !== confirm) {
+    alert("Passwords do not match.");
+    return;
+  }
+  if (password.length < 6) {
+    alert("Password must be at least 6 characters.");
     return;
   }
 
@@ -270,26 +225,25 @@ registerBtn.addEventListener('click', async () => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // Save additional info in Firestore
+    // Save extra info in Firestore
     await setDoc(doc(db, "users", user.uid), {
-      fullName: fullName,
+      name: name,
       email: email,
-      createdAt: new Date()
+      createdAt: serverTimestamp(),
+      profilePic: "" // placeholder for profile picture
     });
 
-    alert("Account created successfully!");
-    window.location.href = "dashboard.html"; // Redirect to dashboard
+    alert("Registration successful! Redirecting to login...");
+    window.location.href = "login.html";
   } catch (error) {
     alert("Error: " + error.message);
   }
 });
 
-// Set footer year
+// Footer year
 document.getElementById('year').textContent = new Date().getFullYear();
-</script>
 
-<!-- NAVBAR JS -->
-<script>
+// Navbar toggle
 const hamburger=document.getElementById('hamburger');
 const panel=document.getElementById('mobilePanel');
 const closeBtn=document.getElementById('mobileClose');
@@ -300,4 +254,4 @@ hamburger.onclick=()=>panel.classList.contains('show')?closePanel():openPanel();
 closeBtn.onclick=closePanel;
 </script>
 </body>
-</html>
+                                                                                   </html>

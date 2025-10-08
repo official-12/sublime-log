@@ -195,4 +195,109 @@ footer{text-align:center;padding:1rem;background:#111;color:#fff;font-size:.95re
     <input type="email" id="email" placeholder="Email" required>
     <div class="password-field">
       <input type="password" id="password" placeholder="Password" required>
-      <span class
+      <span class="toggle-eye" id="togglePassword">&#128065;</span>
+    </div>
+    <div class="password-field">
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+      <span class="toggle-eye" id="toggleConfirm">&#128065;</span>
+    </div>
+    <button class="submit-btn" id="registerBtn">Sign Up</button>
+    <div class="form-footer">
+      Already have an account? <a href="login.html">Login</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>© <span id="year"></span> Sublime Logs. All Rights Reserved.</div>
+  <div style="margin-top:.35rem;">Design by Sublime Tech Team</div>
+</footer>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-firestore.js";
+
+// Your Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyDRnNoRJ4Zgtu-KEZAdOAKtou2LV9rdL5c",
+  authDomain: "sublime-log.firebaseapp.com",
+  projectId: "sublime-log",
+  storageBucket: "sublime-log.firebasestorage.app",
+  messagingSenderId: "644554254089",
+  appId: "1:644554254089:web:dd3374c9468046a5a015d8",
+  measurementId: "G-YMPGVWCK16"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Show/hide password
+const togglePassword = document.getElementById('togglePassword');
+const passwordInput = document.getElementById('password');
+togglePassword.addEventListener('click', () => {
+  passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+});
+
+const toggleConfirm = document.getElementById('toggleConfirm');
+const confirmInput = document.getElementById('confirmPassword');
+toggleConfirm.addEventListener('click', () => {
+  confirmInput.type = confirmInput.type === 'password' ? 'text' : 'password';
+});
+
+// Register user
+const registerBtn = document.getElementById('registerBtn');
+registerBtn.addEventListener('click', async () => {
+  const fullName = document.getElementById('fullName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = passwordInput.value;
+  const confirmPassword = confirmInput.value;
+
+  if (!fullName || !email || !password || !confirmPassword) {
+    alert("Please fill in all fields.");
+    return;
+  }
+  if (password !== confirmPassword) {
+    alert("Passwords do not match!");
+    return;
+  }
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Save additional info in Firestore
+    await setDoc(doc(db, "users", user.uid), {
+      fullName: fullName,
+      email: email,
+      createdAt: new Date()
+    });
+
+    alert("Account created successfully!");
+    window.location.href = "dashboard.html"; // Redirect to dashboard
+  } catch (error) {
+    alert("Error: " + error.message);
+  }
+});
+
+// Set footer year
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+<!-- NAVBAR JS -->
+<script>
+const hamburger=document.getElementById('hamburger');
+const panel=document.getElementById('mobilePanel');
+const closeBtn=document.getElementById('mobileClose');
+const bars=hamburger.querySelectorAll('.bar');
+function openPanel(){panel.classList.add('show');bars[0].style.transform='translateY(8px) rotate(45deg)';bars[1].style.opacity='0';bars[2].style.transform='translateY(-8px) rotate(-45deg)';}
+function closePanel(){panel.classList.remove('show');bars.forEach(b=>{b.style='';});}
+hamburger.onclick=()=>panel.classList.contains('show')?closePanel():openPanel();
+closeBtn.onclick=closePanel;
+</script>
+</body>
+</html>

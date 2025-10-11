@@ -1,142 +1,114 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, getDocs, query, where, orderBy, setDoc, addDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, onSnapshot, query, orderBy } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyDRnNoRJ4Zgtu-KEZAdOAKtou2LV9rdL5c",
-  authDomain: "sublime-log.firebaseapp.com",
-  projectId: "sublime-log",
-  storageBucket: "sublime-log.appspot.com",
-  messagingSenderId: "644554254089",
-  appId: "1:644554254089:web:dd3374c9468046a5a015d8"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-
+const db = getFirestore();
+const auth = getAuth();
 const user = auth.currentUser;
 
-// Fetch user profile
-async function fetchUserProfile() {
-  if (!user) return;
-  const userRef = doc(db, "users", user.uid);
-  const userSnap = await getDoc(userRef);
-  if (userSnap.exists()) {
-    const data = userSnap.data();
+// ---------- Real-time user balance ----------
+const userRef = doc(db, "users", user.uid);
+onSnapshot(userRef, (docSnap) => {
+  if (docSnap.exists()) {
+    const data = docSnap.data();
     document.getElementById("name").innerText = `${data.firstName} ${data.surname}`;
     document.getElementById("email").innerText = data.email;
-    document.getElementById("balance").innerText = data.balance || 0;
-    document.getElementById("profilePic").src = data.picture || "default.png";
+    document.getElementById("balance").innerText = `₦${data.balance}`;
   }
-}
-fetchUserProfile();
+});
 
-// Update balance in real-time
-if(user){
-  const userRef = doc(db, "users", user.uid);
-  onSnapshot(userRef, (docSnap) => {
-    if(docSnap.exists()) document.getElementById("balance").innerText = docSnap.data().balance || 0;
-  });
-}
-
-// Fetch transactions
-async function fetchUserTransactions() {
-  if (!user) return;
-  const transactionsRef = collection(db, "transactions");
-  const q = query(transactionsRef, where("userId", "==", user.uid), orderBy("timestamp", "desc"));
-  const snapshot = await getDocs(q);
-  const tbody = document.getElementById("transactionTable");
-  tbody.innerHTML = "";
-  snapshot.forEach(doc => {
-    const t = doc.data();
-    const time = t.timestamp?.seconds ? new Date(t.timestamp.seconds * 1000).toLocaleString() : t.timestamp;
-    tbody.innerHTML += `<tr>
-      <td>${t.transactionId}</td>
-      <td>${t.amount}</td>
-      <td>${t.status}</td>
-      <td>${time}</td>
-    </tr>`;
-  });
-}
-fetchUserTransactions();
-
-// Paystack popup for funding wallet
-document.getElementById("fundWalletBtn").addEventListener("click", async () => {
-  const amount = parseInt(prompt("Enter amount to fund wallet (₦):"), 10);
-  if(!amount || amount <= 0) return alert("Invalid amount");
+// ---------- Wallet Funding via Paystack ----------
+document.getElementById("fundWalletBtn").addEventListener("click", () => {
+  const amount = parseInt(prompt("Enter amount to fund wallet (NGN):")) * 100;
+  if (!amount || amount < 100) return alert("Invalid amount.");
 
   const handler = PaystackPop.setup({
-    key: "pk_live_69a14ffd1eeecad2a0f9515ca0544c69d5444976", // public key
+    key: "pk_live_69a14ffd1eeecad2a0f9515ca0544c69d5444976", // Live Public Key
     email: user.email,
-    amount: amount * 100,
+    amount: amount,
     currency: "NGN",
     metadata: { user_id: user.uid },
-    callback: async (response) => {
-      const transRef = await addDoc(collection(db, "transactions"), {
-        transactionId: response.reference,
-        email: user.email,
-        amount: amount,
-        status: "success",
-        userId: user.uid,
-        timestamp: serverTimestamp(),
-        gateway_response: "Fund wallet"
-      });
-      // Update balance
-      const userRef = doc(db, "users", user.uid);
+    callback: async function (response) {
+      // Payment success → update Firestore balance
       const userSnap = await getDoc(userRef);
-      const balance = userSnap.data().balance || 0;
-      await setDoc(userRef, { balance: balance + amount }, { merge: true });
-      fetchUserTransactions();
+      const currentBalance = userSnap.data().balance || 0;
+      await updateDoc(userRef, { balance: currentBalance + amount / 100 });
+
+      // Record transaction
+      await addDoc(collection(db, "transactions"), {
+        transactionId: response.reference,
+        userId: user.uid,
+        amount: amount / 100,
+        status: "success",
+        currency: "NGN",
+        timestamp: new Date(),
+        gateway_response: "paystack",
+      });
+
       alert("Wallet funded successfully!");
     },
-    onClose: () => alert("Payment cancelled")
+    onClose: function () { alert("Transaction cancelled."); },
   });
   handler.openIframe();
 });
 
-// Buy Number button
+// ---------- Buy Number (₦500) ----------
 document.getElementById("buyNumberBtn").addEventListener("click", async () => {
-  if(!user) return;
-  const userRef = doc(db, "users", user.uid);
-  const userSnap = await getDoc(userRef);
-  let balance = userSnap.data().balance || 0;
   const cost = 500;
-  if(balance < cost) return alert("Insufficient balance");
+  const userSnap = await getDoc(userRef);
+  const userBalance = userSnap.data().balance || 0;
+  if (userBalance < cost) return alert("Insufficient balance.");
 
-  // Deduct cost
-  await setDoc(userRef, { balance: balance - cost }, { merge: true });
+  // Deduct balance
+  await updateDoc(userRef, { balance: userBalance - cost });
 
-  // Generate fake number & OTP
-  const number = "0" + Math.floor(Math.random() * 9000000000 + 1000000000); // 11 digits
-  const otp = Math.floor(10000 + Math.random() * 90000); // 5 digits
+  // Generate fake 11-digit number & 5-digit OTP
+  const fakeNumber = `0${Math.floor(1000000000 + Math.random() * 9000000000)}`;
+  const fakeOTP = Math.floor(10000 + Math.random() * 90000);
 
-  // Show on dashboard
-  document.getElementById("numberDisplay").innerHTML = `Number: ${number} <button class="btn-copy" onclick="copyText('${number}')">Copy</button>`;
-  document.getElementById("otpDisplay").innerHTML = `OTP: ${otp} <button class="btn-copy" onclick="copyText('${otp}')">Copy</button>`;
+  // Display on dashboard
+  document.getElementById("number").innerText = fakeNumber;
+  document.getElementById("otp").innerText = fakeOTP;
 
-  // Add transaction
-  await addDoc(collection(db, "transactions"), {
-    transactionId: "NUM-" + Date.now(),
-    email: user.email,
+  // Record transaction
+  const transactionRef = await addDoc(collection(db, "transactions"), {
+    transactionId: `TXN${Date.now()}`,
+    userId: user.uid,
     amount: cost,
     status: "success",
-    userId: user.uid,
-    number: number,
-    otp: otp,
-    timestamp: serverTimestamp(),
-    gateway_response: "Number purchase"
+    currency: "NGN",
+    timestamp: new Date(),
+    gateway_response: "manual",
   });
 
-  // Refresh transactions table
-  fetchUserTransactions();
+  // Optional: trigger Pipedream webhook
+  fetch("https://eo6rp415o24cz5w.m.pipedream.net/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId: user.uid,
+      number: fakeNumber,
+      otp: fakeOTP,
+      transactionId: transactionRef.id,
+    }),
+  });
 
-  alert("Number purchased successfully! OTP will appear when received.");
+  alert(`Number purchased!\nNumber: ${fakeNumber}\nOTP: ${fakeOTP}`);
 });
 
-// Copy number or OTP
-window.copyText = function(text) {
-  navigator.clipboard.writeText(text)
-    .then(() => alert("Copied to clipboard!"))
-    .catch(err => alert("Failed to copy: " + err));
-};
+// ---------- Real-time Transactions Table ----------
+const transactionsRef = collection(db, "transactions");
+const q = query(transactionsRef, orderBy("timestamp", "desc"));
+onSnapshot(q, (snapshot) => {
+  const table = document.getElementById("transactionTable");
+  table.innerHTML = snapshot.docs
+    .filter(doc => doc.data().userId === user.uid)
+    .map(doc => {
+      const t = doc.data();
+      return `<tr>
+                <td>${t.transactionId}</td>
+                <td>₦${t.amount}</td>
+                <td>${t.status}</td>
+                <td>${new Date(t.timestamp.seconds * 1000 || t.timestamp.toDate()).toLocaleString()}</td>
+              </tr>`;
+    }).join("");
+});

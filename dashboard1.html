@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard 1 - Buy Number</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">Sublime-Log</div>
+    <ul class="nav-menu">
+      <li><a href="homepage.html">Home</a></li>
+      <li><a href="#" id="profileLink">Profile</a></li>
+      <li><a href="#" id="logoutBtn">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Profile Card -->
+  <section class="profile-card">
+    <img id="profilePic" src="default.png" alt="Profile Picture">
+    <input type="file" id="uploadPic" />
+    <h2 id="name">Name</h2>
+    <p id="email">Email</p>
+    <p>Balance: <span id="balance">₦0</span></p>
+  </section>
+
+  <!-- Number Purchase Section -->
+  <section class="purchase-section">
+    <h2>Buy Number</h2>
+    <button id="buyNumberBtn">Buy Number</button>
+
+    <div class="number-card" id="numberCard" style="display:none;">
+      <p>Number: <span id="number"></span> <button id="copyNumber">Copy</button></p>
+      <p>OTP: <span id="otp">*****</span> <button id="copyOtp">Copy</button></p>
+    </div>
+  </section>
+
+  <!-- Transaction History -->
+  <section class="transaction-history">
+    <h2>Transaction History</h2>
+    <table id="transactionTable">
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    <p>&copy; Sublime-Log 2025</p>
+  </footer>
+
+  <script type="module" src="dashboard1.js"></script>
+</body>
+</html>￼Enter

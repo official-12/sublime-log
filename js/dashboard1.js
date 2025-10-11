@@ -1,142 +1,88 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs, addDoc, orderBy, serverTimestamp, onSnapshot } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, orderBy, serverTimestamp, deleteDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { loadStripe } from "@stripe/stripe-js"; // if using stripe fallback
+import { initializeApp } from "firebase/app";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-// Firebase config
-import { firebaseConfig } from "./firebase.js";
+// Firebase config (replace with your config)
+const firebaseConfig = {
+    apiKey: "AIzaSyDRnNoRJ4Zgtu-KEZAdOAKtou2LV9rdL5c",
+    authDomain: "sublime-log.firebaseapp.com",
+    projectId: "sublime-log",
+    storageBucket: "sublime-log.appspot.com",
+    messagingSenderId: "644554254089",
+    appId: "1:644554254089:web:dd3374c9468046a5a015d8"
+};
+
 const app = initializeApp(firebaseConfig);
+const db = getFirestore();
+const auth = getAuth();
+const storage = getStorage();
 
-const db = getFirestore(app);
-const auth = getAuth(app);
+// Get current logged-in user
+const user = auth.currentUser;
 
-// DOM elements
-const nameEl = document.getElementById("name");
-const emailEl = document.getElementById("email");
-const balanceEl = document.getElementById("balance");
-const profilePicEl = document.getElementById("profilePic");
-const uploadPicEl = document.getElementById("uploadPic");
+// PROFILE
+const profilePic = document.getElementById("profilePic");
+const uploadBtn = document.getElementById("uploadBtn");
+const uploadInput = document.getElementById("uploadPic");
 
-const buyBtn = document.getElementById("buyNumberBtn");
-const numberCard = document.getElementById("numberCard");
-const numberEl = document.getElementById("number");
-const otpEl = document.getElementById("otp");
+uploadBtn.addEventListener("click", () => uploadInput.click());
+uploadInput.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const fileRef = ref(storage, `profilePics/${user.uid}`);
+    await uploadBytes(fileRef, file);
+    const url = await getDownloadURL(fileRef);
+    profilePic.src = url;
+    await updateDoc(doc(db, "users", user.uid), { picture: url });
+});
+
+// FETCH USER PROFILE
+async function fetchUserProfile() {
+    if (!user) return;
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+        const data = userSnap.data();
+        document.getElementById("name").innerText = `${data.firstName} ${data.surname}`;
+        document.getElementById("email").innerText = data.email;
+        document.getElementById("balance").innerText = `₦${data.balance}`;
+    }
+}
+fetchUserProfile();
+
+// BUY NUMBER SECTION
+const getNumberBtn = document.getElementById("getNumberBtn");
+const numberSpan = document.getElementById("number");
+const otpSpan = document.getElementById("otp");
 const copyNumberBtn = document.getElementById("copyNumber");
 const copyOtpBtn = document.getElementById("copyOtp");
 
-const transactionTable = document.getElementById("transactionTable").getElementsByTagName('tbody')[0];
-
-// --- FETCH USER PROFILE ---
-async function fetchUserProfile() {
-  const user = auth.currentUser;
-  if (!user) return;
-
-  const userRef = doc(db, "users", user.uid);
-  onSnapshot(userRef, (docSnap) => {
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      nameEl.innerText = `${data.firstName} ${data.surname}`;
-      emailEl.innerText = data.email;
-      balanceEl.innerText = `₦${data.balance}`;
-      profilePicEl.src = data.picture || "default.png";
-    }
-  });
-}
-
-// --- COPY FUNCTION ---
-function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).then(() => alert("Copied!"));
-}
-
-copyNumberBtn.addEventListener("click", () => copyToClipboard(numberEl.innerText));
-copyOtpBtn.addEventListener("click", () => copyToClipboard(otpEl.innerText));
-
-// --- GENERATE RANDOM NUMBER AND OTP ---
 function generateNumber() {
-  return Math.floor(10000000000 + Math.random() * 90000000000).toString();
+    return Math.floor(10000000000 + Math.random() * 90000000000).toString(); // 11 digits
 }
-
 function generateOtp() {
-  return Math.floor(10000 + Math.random() * 90000).toString();
+    return Math.floor(10000 + Math.random() * 90000).toString(); // 5 digits
 }
 
-// --- FETCH TRANSACTIONS ---
-async function fetchTransactions() {
-  const user = auth.currentUser;
-  if (!user) return;
+getNumberBtn.addEventListener("click", async () => {
+    const price = 500;
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) return alert("User not found");
+    const balance = userSnap.data().balance;
+    if (balance < price) return alert("Insufficient balance");
 
-  const transactionsRef = collection(db, "transactions");
-  const q = query(transactionsRef, where("userId", "==", user.uid), orderBy("timestamp", "desc"));
-  const querySnapshot = await getDocs(q);
+    const number = generateNumber();
+    const otp = generateOtp();
 
-  transactionTable.innerHTML = "";
-  querySnapshot.forEach(doc => {
-    const t = doc.data();
-    const row = transactionTable.insertRow();
-    row.insertCell(0).innerText = t.transactionId;
-    row.insertCell(1).innerText = `₦${t.amount}`;
-    row.insertCell(2).innerText = t.status;
-    row.insertCell(3).innerText = new Date(t.timestamp.seconds * 1000).toLocaleString();
-  });
-}
+    // Update wallet
+    await updateDoc(userRef, { balance: balance - price });
 
-// --- BUY NUMBER (TEMP PURCHASE) ---
-buyBtn.addEventListener("click", async () => {
-  const user = auth.currentUser;
-  if (!user) return;
+    // Show on dashboard
+    numberSpan.innerText = number;
+    otpSpan.innerText = otp;
+    document.getElementById("balance").innerText = `₦${balance - price}`;
 
-  // Here trigger Paystack checkout
-  const amount = 500; // example for testing, update dynamically
-  const userRef = doc(db, "users", user.uid);
-
-  // Check balance
-  const userSnap = await getDoc(userRef);
-  if (!userSnap.exists()) return;
-  const balance = userSnap.data().balance;
-
-  if (balance < amount) {
-    alert("Insufficient balance! Please fund your account.");
-    return;
-  }
-
-  // Deduct balance
-  await updateDoc(userRef, { balance: balance - amount });
-
-  // Generate number & OTP
-  const number = generateNumber();
-  const otp = generateOtp();
-
-  // Save temp purchase
-  await addDoc(collection(db, "tempPurchases"), {
-    userId: user.uid,
-    number,
-    otp,
-    amount,
-    status: "success",
-    timestamp: serverTimestamp()
-  });
-
-  // Display immediately
-  numberCard.style.display = "block";
-  numberEl.innerText = number;
-  otpEl.innerText = otp;
-
-  // Save transaction
-  await addDoc(collection(db, "transactions"), {
-    transactionId: `TXN-${Date.now()}`,
-    userId: user.uid,
-    amount,
-    status: "success",
-    timestamp: serverTimestamp()
-  });
-
-  // Refresh transactions table
-  fetchTransactions();
-});
-
-// --- INITIAL LOAD ---
-auth.onAuthStateChanged(user => {
-  if (user) {
-    fetchUserProfile();
-    fetchTransactions();
-  }
-});
+    // Save purchase temporarily

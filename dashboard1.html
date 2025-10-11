@@ -1,66 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard 1 - Buy Number & OTP</title>
-    <link rel="stylesheet" href="dashboard.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    /* Gradient background */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #800080, #ff69b4);
+      color: #fff;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: rgba(0,0,0,0.3);
+    }
+    nav h1 { font-size: 1.5rem; }
+    nav button { background: #fff; color: #800080; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; }
+    main { padding: 2rem; max-width: 1000px; margin: auto; }
+    .profile { display: flex; gap: 1.5rem; align-items: center; margin-bottom: 2rem; }
+    .profile img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+    .wallet { margin-bottom: 2rem; }
+    .wallet button { margin-top: 0.5rem; }
+    .number-section { background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; margin-bottom: 2rem; }
+    table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.2); }
+    th, td { padding: 0.5rem; text-align: left; border-bottom: 1px solid #fff; }
+    th { background: rgba(255,255,255,0.3); }
+    .btn-buy { background: #ff69b4; color: #fff; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; }
+    .btn-copy { background: #800080; color: #fff; padding: 0.3rem 0.6rem; border: none; border-radius: 5px; cursor: pointer; margin-left: 0.5rem; }
+  </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-left">Dashboard</div>
-        <div class="nav-right">
-            <button id="sendGiftBtn" onclick="window.open('dashboard2.html', '_blank')">Send Gift</button>
-        </div>
-    </nav>
+  <nav>
+    <h1>Dashboard</h1>
+    <button id="fundWalletBtn">Fund Wallet</button>
+  </nav>
 
-    <!-- Profile Card -->
-    <section class="profile-card">
-        <img id="profilePic" src="default.png" alt="Profile Picture">
-        <input type="file" id="uploadPic" accept="image/*" style="display:none;">
-        <button id="uploadBtn">Upload Picture</button>
-        <h2 id="name">John Doe</h2>
-        <p id="email">example@mail.com</p>
-        <p>Wallet Balance: <span id="balance">₦0</span></p>
-    </section>
+  <main>
+    <div class="profile">
+      <img id="profilePic" src="default.png" alt="Profile">
+      <div>
+        <div>Name: <span id="name">Loading...</span></div>
+        <div>Email: <span id="email">Loading...</span></div>
+        <div>Balance: ₦<span id="balance">0</span></div>
+      </div>
+    </div>
 
-    <!-- Buy Number Section -->
-    <section class="buy-number-card">
-        <h2>Buy Number</h2>
-        <p>Price: ₦500</p>
-        <button id="getNumberBtn">Get Number</button>
-        <div class="number-display">
-            <p>Number: <span id="number">-</span> <button id="copyNumber">Copy</button></p>
-            <p>OTP: <span id="otp">-</span> <button id="copyOtp">Copy</button></p>
-        </div>
-    </section>
+    <div class="wallet">
+      <h2>Buy Number</h2>
+      <div class="number-section">
+        <button class="btn-buy" id="buyNumberBtn">Buy Number (₦500)</button>
+        <div id="numberDisplay"></div>
+        <div id="otpDisplay"></div>
+      </div>
+    </div>
 
-    <!-- Fund Wallet Section -->
-    <section class="fund-wallet-card">
-        <h2>Fund Wallet</h2>
-        <input type="number" id="fundAmount" placeholder="Enter amount">
-        <button id="fundWalletBtn">Fund Wallet</button>
-    </section>
+    <h2>Transactions</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody id="transactionTable"></tbody>
+    </table>
+  </main>
 
-    <!-- Transactions Table -->
-    <section class="transaction-card">
-        <h2>Transaction History</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Transaction ID</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Timestamp</th>
-                </tr>
-            </thead>
-            <tbody id="transactionTable">
-                <!-- Transactions will populate here -->
-            </tbody>
-        </table>
-    </section>
-
-    <script type="module" src="dashboard1.js"></script>
+  <script type="module" src="dashboard.js"></script>
 </body>
 </html>
